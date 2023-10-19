@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#include "debugmalloc.h"
+
 #define WIDTH  1280
 #define HEIGHT  720
 

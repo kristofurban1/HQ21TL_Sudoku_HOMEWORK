@@ -9,7 +9,7 @@
                 "compile"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/Sudoku"
             }
         }
     ],

@@ -5,7 +5,7 @@
         "type": "clr",
         "request": "launch",
         "preLaunchTask": "Makefile Compile",
-        "cwd": "${workspaceFolder}",
+        "cwd": "${workspaceFolder}/Sudoku",
         "program": "make"
     }
     ]
