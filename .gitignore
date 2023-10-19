@@ -1,3 +1,4 @@
 Sudoku/*.depend
 Sudoku/*.layout
-Sudoku/bin/.exe
+Sudoku/bin/*.exe
+Sudoku/obj/*
