@@ -1,0 +1,12 @@
+{
+    "configurations": [
+    {
+        "name": "Makefile run",
+        "type": "clr",
+        "request": "launch",
+        "preLaunchTask": "Makefile Compile",
+        "cwd": "${workspaceFolder}",
+        "program": "make"
+    }
+    ]
+}
