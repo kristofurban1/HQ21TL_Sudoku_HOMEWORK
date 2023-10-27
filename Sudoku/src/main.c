@@ -26,9 +26,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    char *path = SDL_GetBasePath();
-    printf("%s\n", path);
-
     bool running = true;
     while(running){
         SDL_Event event;
