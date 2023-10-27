@@ -2,6 +2,9 @@
 
 extern int main(int argc, char *argv[]) {
     
+    MainWindowWidth  = Default_WIDTH;
+    MainWindowHeight = Default_HEIGHT;
+
     GC_Init();          // GarbageCollector
     INITIALIZE_ALL();   // SDL
     

@@ -1,11 +1,13 @@
 #ifndef ERROR_HANDLER_DEF
+#define ERROR_HANDLER_DEF
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "Cleanup.h"
 
-#include <SDL2/SDL.h>>
+#include <SDL2/SDL.h>
 
 #define MSG_MALLOC_ERROR "Error: Malloc failed!"
 
@@ -15,12 +17,12 @@ extern char *error_identifier;
 /*
     @brief Verifies if malloc if succesful. Raises error if it fails.
 */
-extern void malloc_verfy(void *ptr);
+extern void malloc_verify(void *ptr);
 
 /*
     @brief Verifies SDL NULL pointer exceptions.
 */
-extern void SDL_ptr_verfy(void *ptr);
+extern void SDL_ptr_verify(void *ptr);
 
 /*
     @brief Verifies that SDL command executed succesfully. Raises error if it falis.

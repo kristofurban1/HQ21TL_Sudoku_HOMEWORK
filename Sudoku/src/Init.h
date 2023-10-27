@@ -1,4 +1,5 @@
 #ifndef INIT_DEF
+#define INIT_DEF
 
 #include "ErrorHandler.h"
 

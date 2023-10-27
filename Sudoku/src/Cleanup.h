@@ -6,6 +6,7 @@
 */
 
 #ifndef CLEANUP_DEF
+#define CLEANUP_DEF
 
 #include "debugmalloc.h"
 #include "ErrorHandler.h"

@@ -23,7 +23,7 @@ extern void Create_Window(SDL_Window *window, int WinPosX, int WinPosY, int Widt
 extern void Create_Renderer(SDL_Window *target_window, SDL_Renderer *renderer, SDL_RendererFlags flags){
     renderer = SDL_CreateRenderer(target_window, -1, SDL_RENDERER_ACCELERATED);
     error_identifier = "SDL Renderer Creation.\n";
-    SDL_ptr_verfy(renderer);
+    SDL_ptr_verify(renderer);
 
     GC_AppendRenderer(renderer);
 }

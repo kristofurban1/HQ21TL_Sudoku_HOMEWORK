@@ -1,4 +1,5 @@
 #ifndef MAIN_DEF
+#define MAIN_DEF
 
 #include "debugmalloc.h"
 
@@ -8,9 +9,9 @@
 #include <SDL2/SDL.h>
 
 #include "WINDOW_PARAMETERS.h"
-#include "Init.h"
 #include "ErrorHandler.h"
 #include "Cleanup.h"
+#include "Init.h"
 
 /*
     Program Main entry point.
