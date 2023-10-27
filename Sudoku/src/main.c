@@ -1,31 +1,14 @@
-#include <SDL2/SDL.h>
-#include <stdio.h>
-#include <stdbool.h>
+#include "main.h"
 
-#include "debugmalloc.h"
+extern int main(int argc, char *argv[]) {
+    
+    GC_Init();          // GarbageCollector
+    INITIALIZE_ALL();   // SDL
+    
+    SDL_SetRenderDrawColor(MainRenderer, 0, 255, 255, 255);
+    SDL_RenderClear(MainRenderer);
 
-#define WIDTH  1280
-#define HEIGHT  720
-
-#define FPS (1000/60)
-
-int main(int argc, char *argv[]) {
-    if(SDL_Init(SDL_INIT_VIDEO) < 0){
-        printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
-        return 1;
-    }
-    SDL_Window *window = SDL_CreateWindow("SLD test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, 0);
-    if(!window){
-        printf("Error: Failed to open window\nSDL Error: '%s'\n", SDL_GetError());
-        return 1;
-    }
-
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if(!renderer){
-        printf("Error: Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
-        return 1;
-    }
-
+    bool render = true;
     bool running = true;
     while(running){
         SDL_Event event;
@@ -40,11 +23,16 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
-        SDL_RenderClear(renderer);
+        if (render){
+            SDL_RenderPresent(MainRenderer);
 
-        SDL_RenderPresent(renderer);
+            SDL_SetRenderDrawColor(MainRenderer, 0, 255, 255, 255);
+            SDL_RenderClear(MainRenderer);
+            render = false;
+        }
     }
+
+    EXECUTE_CLEANUP();
 
     return 0;
 }
