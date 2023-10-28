@@ -5,14 +5,17 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "Cleanup.h"
-
 #include <SDL2/SDL.h>
 
 #define MSG_MALLOC_ERROR "Error: Malloc failed!"
 
 static char *error_message;
-extern char *error_identifier;
+static char *error_identifyer;
+
+/*
+    @brief Sets the error identifyer variable.
+*/
+extern void SetErrorIndentfyer(char *errid);
 
 /*
     @brief Verifies if malloc if succesful. Raises error if it fails.
@@ -30,7 +33,7 @@ extern void SDL_ptr_verify(void *ptr);
 extern void SDL_verify(int err_c);
 
 /*
-    @brief When encountering fatal error, this will immidietly clean up and exit.
+    @brief When encountering fatal error, this will print the error message and identifyer then exit without cleanup.
 */
 static void RAISE_ERROR();
 

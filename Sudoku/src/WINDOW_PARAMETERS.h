@@ -1,8 +1,7 @@
-#ifndef WINDOW_PARAMETERS_DEF
+//#ifndef WINDOW_PARAMETERS_DEF
 #define WINDOW_PARAMETERS_DEF
 
 #include <SDL2/SDL.h>
-
 
 #define SDL_FLAGS SDL_INIT_EVERYTHING
 #define WindowFlags 0
@@ -22,4 +21,4 @@ extern SDL_Renderer *MainRenderer;
 extern int MainWindowWidth;
 extern int MainWindowHeight;
 
-#endif
+//#endif

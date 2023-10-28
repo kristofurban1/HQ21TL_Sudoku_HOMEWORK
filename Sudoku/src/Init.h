@@ -1,12 +1,12 @@
 #ifndef INIT_DEF
 #define INIT_DEF
 
+#include "WINDOW_PARAMETERS.h"
 #include "ErrorHandler.h"
+#include "Cleanup.h"
 
 #include <SDL2/SDL.h>
-#include "WINDOW_PARAMETERS.h"
 
-#include "CleanUp.h"
 
 /*
     @brief Initializes every startup module.
@@ -37,7 +37,7 @@ extern void Init_SDL(Uint32 flags);
     @exception
         OpenGL, Vulcan, Metal are not initialized. Do not set flags that make use of those libraries.
 */
-extern void Create_Window(SDL_Window *window, int WinPosX, int WinPosY, int Width, int Height, SDL_WindowFlags flags);
+extern void Create_Window(SDL_Window **window, int WinPosX, int WinPosY, int Width, int Height, SDL_WindowFlags flags);
 
 /*
     @brief Creates a new renderer.
@@ -45,7 +45,7 @@ extern void Create_Window(SDL_Window *window, int WinPosX, int WinPosY, int Widt
     @param renderer Pointer to the created renderer.
     @param flags Renderer flags
 */
-extern void Create_Renderer(SDL_Window *target_window, SDL_Renderer *renderer, SDL_RendererFlags flags);
+extern void Create_Renderer(SDL_Window *target_window, SDL_Renderer **renderer, SDL_RendererFlags flags);
 
 
 #endif

@@ -22,9 +22,6 @@ static void **GarbageCollector_Windows;
 static int GC_RendererCount = 0;
 static void **GarbageCollector_Renderers;
 
-static int GC_ExtraCallable_Count = 0;
-static void (**GC_ExtraCallable) (void);
-
 /*
     @brief Initialize
     @note Call before attemplting to use garbage collector.
@@ -63,12 +60,6 @@ extern void GC_AppendWindow(void *window);
 extern void GC_AppendRenderer(void *renderer);
 
 /*
-    @bried Append pointer to function to call during cleanup.
-    @param callable Function pointer with no arguments.
-*/
-extern void GC_AppendExtraCallable(void *callable);
-
-/*
     @brief Frees every appended item. Call at the end of the program.
     @note Uninitializes Cleanup!
 */
@@ -80,6 +71,5 @@ extern void EXECUTE_CLEANUP();
 #define ErrID_GC_Append     "Cleanup.c: GC_Append\n"
 #define ErrID_GC_AppendW    "Cleanup.c: GC_AppendWindow\n"
 #define ErrID_GC_AppendR    "Cleanup.c: GC_AppendRenderer\n"
-#define ErrID_GC_AppendC    "Cleanup.c: GC_AppendExtraCallable\n"
 
 #endif
