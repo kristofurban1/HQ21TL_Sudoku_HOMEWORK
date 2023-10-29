@@ -9,6 +9,7 @@ extern int main(int argc, char *argv[]) {
     GC_Init();          // GarbageCollector
     INITIALIZE_ALL();   // SDL
 
+    FileHandler_Init();
     
     SDL_SetRenderDrawColor(MainRenderer, 0, 0, 0, 255);
     SDL_RenderClear(MainRenderer);
@@ -43,6 +44,7 @@ extern int main(int argc, char *argv[]) {
             SDL_RenderClear(MainRenderer);
             render = false;
         }
+        SDL_Delay(1);
     }
 
     EXECUTE_CLEANUP();

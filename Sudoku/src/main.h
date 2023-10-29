@@ -12,6 +12,7 @@
 #include "ErrorHandler.h"
 #include "Cleanup.h"
 #include "Init.h"
+#include "file_handler.h"
 
 /*
     Program Main entry point.
