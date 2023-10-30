@@ -25,7 +25,7 @@ char *AppendToBasePath(char *endOfPath, char *basePath){
 
 struct SaveData *GetDefaultSaveData(){
     struct SaveData *def = malloc(sizeof(SaveData));
-        malloc_verify(def);
+        SetErrorIndentfyer("file_handler: GetDefaultSaveData"); malloc_verify(def);
 
         def->BoardSize       = 3;
         def->WindowWidth     = Default_WIDTH;
@@ -87,7 +87,7 @@ struct Leaderboard_Entry *ReadLeaderboard(int *entryCount_out){
 
     struct Leaderboard_Entry *entries;
         entries = malloc(sizeof(Leaderboard_Entry) * entryCount);
-        malloc_verify(entries);
+        SetErrorIndentfyer("file_handler: ReadLeaderboard"); malloc_verify(entries);
         GC_Append(entries);
     
     fread(entries, sizeof(Leaderboard_Entry), entryCount, fp);

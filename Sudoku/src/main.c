@@ -9,15 +9,11 @@ extern int main(int argc, char *argv[]) {
     GC_Init();          // GarbageCollector
     INITIALIZE_ALL();   // SDL
 
-    FileHandler_Init();
-
-    struct SaveData *data = ReadSaveData();
-    malloc_verify(data);
-    
+    FileHandler_Init();    
     
     SDL_SetRenderDrawColor(MainRenderer, 255, 255, 255, 255);
     SDL_RenderClear(MainRenderer);
-    
+
 
     SDL_RenderPresent(MainRenderer);
     SDL_Delay(1000);

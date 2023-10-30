@@ -6,6 +6,7 @@
 #include "Cleanup.h"
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 
 /*
@@ -21,6 +22,9 @@ extern void INITIALIZE_ALL();
     @param flags SDL Subsystems to initialize.
 */
 extern void Init_SDL(Uint32 flags);
+
+
+extern void Init_TTF();
 
 /*
     @brief Creates a new window.
