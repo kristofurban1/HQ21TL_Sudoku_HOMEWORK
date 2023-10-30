@@ -68,6 +68,34 @@ struct SaveData *ReadSaveData(){
     return data;
 }
 
+void WriteLeaderboard(struct Leaderboard_Entry *entries, int entryCount){
+    char *pszLeaderboardPath = AppendToBasePath(PATH_LEADERBOARD, BasePath);
+    FILE *fp = fopen(pszLeaderboardPath, "w");
+    free(pszLeaderboardPath);
+    fwrite(&entryCount, sizeof(int), 1, fp);
+    fwrite(entries, sizeof(Leaderboard_Entry), entryCount, fp);
+    fclose(fp);
+}
+
+struct Leaderboard_Entry *ReadLeaderboard(int *entryCount_out){
+    char *pszLeaderboardPath = AppendToBasePath(PATH_LEADERBOARD, BasePath);
+    FILE *fp = fopen(pszLeaderboardPath, "r");
+    free(pszLeaderboardPath);
+
+    int entryCount;
+    fread(&entryCount, sizeof(int), 1, fp);
+
+    struct Leaderboard_Entry *entries;
+        entries = malloc(sizeof(Leaderboard_Entry) * entryCount);
+        malloc_verify(entries);
+        GC_Append(entries);
+    
+    fread(entries, sizeof(Leaderboard_Entry), entryCount, fp);
+    fclose(fp);
+    entryCount_out = &entryCount;
+    return entries;
+}
+
 void FileHandler_Init(){
     BasePath = SDL_GetBasePath(); //GC_Append(BasePath);
 
@@ -86,10 +114,15 @@ void FileHandler_Init(){
 
     char *pszLeaderboardPath = AppendToBasePath(PATH_LEADERBOARD, BasePath);
     if (!FileExists(pszLeaderboardPath)){
-        FILE *fp = fopen(pszLeaderboardPath, "w+");
-        fwrite(0, sizeof(int), 1, fp);
-
-        fclose(fp);
+        WriteLeaderboard(NULL, 0);
     }
     free(pszLeaderboardPath);
+}
+
+char *GetAsset(char* assetName){
+    char *pszAssetFolder = AppendToBasePath(DIR_ASSETS, BasePath);
+    char *pszAssetPath = AppendToBasePath(assetName, pszAssetFolder); GC_Append(pszAssetPath);
+    free(pszAssetFolder);
+
+    return pszAssetPath;
 }

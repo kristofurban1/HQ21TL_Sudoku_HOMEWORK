@@ -15,8 +15,12 @@ extern int main(int argc, char *argv[]) {
     malloc_verify(data);
     
     
-    SDL_SetRenderDrawColor(MainRenderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(MainRenderer, 255, 255, 255, 255);
     SDL_RenderClear(MainRenderer);
+    
+
+    SDL_RenderPresent(MainRenderer);
+    SDL_Delay(1000);
 
     Uint64 timer_forceRender = SDL_GetTicks64();
 
@@ -44,7 +48,7 @@ extern int main(int argc, char *argv[]) {
         if (render){
             SDL_RenderPresent(MainRenderer);
 
-            SDL_SetRenderDrawColor(MainRenderer, 0, 255, 255, 255);
+            SDL_SetRenderDrawColor(MainRenderer, 0, 0, 0, 255);
             SDL_RenderClear(MainRenderer);
             render = false;
         }

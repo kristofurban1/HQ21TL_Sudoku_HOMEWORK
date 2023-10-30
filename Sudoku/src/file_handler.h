@@ -22,8 +22,10 @@
 #define PATH_SAVEDATA       "data\\savedata.bin"
 #define PATH_LEADERBOARD    "data\\leaderboard.bin"
 
-#define DIR_DATA           "data\\"
+#define DIR_DATA            "data\\"
 #define DIR_ASSETS          "data\\assets\\"
+
+#define ASSET_FONT          "font.ttf"
 
 static bool FileExists(const char *filename);
 
@@ -37,9 +39,10 @@ extern struct SaveData *ReadSaveData();
 
 extern void WriteSaveData(struct SaveData *data);
 
-extern struct Leaderboard_Entry *ReadLEaderboard();
+extern struct Leaderboard_Entry *ReadLeaderboard(int *entryCount);
 
-extern void WriteLeaderboard(struct Leaderboard_Entry *entry);
+extern void WriteLeaderboard(struct Leaderboard_Entry *entries, int entryCount);
 
+extern char *GetAsset(char* assetName);
 
 #endif
