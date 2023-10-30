@@ -8,12 +8,15 @@ SDL_Renderer *MainRenderer  = NULL;
 extern int main(int argc, char *argv[]) {
     GC_Init();          // GarbageCollector
     INITIALIZE_ALL();   // SDL
-
+    FontManager_Init();
     FileHandler_Init();    
+
     
     SDL_SetRenderDrawColor(MainRenderer, 255, 255, 255, 255);
     SDL_RenderClear(MainRenderer);
 
+    UIElements_GenerateStatic();
+    Render_TextureElement(TitleScreen);
 
     SDL_RenderPresent(MainRenderer);
     SDL_Delay(1000);

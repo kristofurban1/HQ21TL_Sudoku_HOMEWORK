@@ -13,6 +13,8 @@
 #include "Cleanup.h"
 #include "Init.h"
 #include "file_handler.h"
+#include "UI_Elements.h"
+#include "UI_Renderer.h"
 
 /*
     Program Main entry point.

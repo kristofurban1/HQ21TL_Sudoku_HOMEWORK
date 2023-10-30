@@ -1,9 +1,11 @@
 #include "FontManager.h"
 
+TTF_Font *__FONT__;
+
 TTF_Font *LoadFont(int size){
     TTF_Font *font = TTF_OpenFont(GetAsset(ASSET_FONT), size);
     SetErrorIndentfyer("FontManager: TTF_FontLoad");
-    SDL_ptr_verify(font); GC_Append(font);
+    SDL_ptr_verify(font);
     return font;
 }
 
@@ -18,3 +20,9 @@ SDL_Texture *RenderFont(SDL_Renderer *renderer, TTF_Font *font, char *text, SDL_
     SDL_QueryTexture(texture, NULL, NULL, width, height);
     return texture;
 }
+
+void FontManager_Init(){
+    __FONT__ = LoadFont(FontSize); GC_Append(__FONT__);
+}
+
+TTF_Font *GetFont(){ return __FONT__; }
