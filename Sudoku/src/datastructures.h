@@ -23,17 +23,18 @@ extern enum game_CheatLevel {
 } game_CheatLevel;
 
 extern struct Leaderboard_Entry {
-    int u16BoardSize;
-    uint_16 u16Difficulty;
-    uint_16 u16CheatLevel;
-    long int Seconds;
+    int         BoardSize;
+    uint_16     u16Difficulty;
+    uint_16     u16CheatLevel;
+    long int    Seconds;
 } Leaderboard_Entry;
 
 extern struct SaveData {
-    int u16BoardSize;
-    uint_16 u16Difficulty;
-    uint_16 u16CheatLevel;
-    int WindowWidth, WindowHeight;
+    int         BoardSize;
+    uint_16     u16Difficulty;
+    uint_16     u16CheatLevel;
+    
+    int   WindowWidth, WindowHeight;
 } SaveData;
 
 #endif

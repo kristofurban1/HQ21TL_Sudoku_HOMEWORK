@@ -10,6 +10,10 @@ extern int main(int argc, char *argv[]) {
     INITIALIZE_ALL();   // SDL
 
     FileHandler_Init();
+
+    struct SaveData *data = ReadSaveData();
+    malloc_verify(data);
+    
     
     SDL_SetRenderDrawColor(MainRenderer, 0, 0, 0, 255);
     SDL_RenderClear(MainRenderer);

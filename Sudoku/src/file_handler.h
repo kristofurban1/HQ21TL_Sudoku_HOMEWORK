@@ -10,15 +10,20 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <io.h>
+
 #include <SDL2/SDL.h>
 
 #include "datastructures.h"
+#include "WINDOW_PARAMETERS.h"
 
-#define PATH_SAVADATA       "data\\savedata.bin"
+#include "Cleanup.h"
+
+#define PATH_SAVEDATA       "data\\savedata.bin"
 #define PATH_LEADERBOARD    "data\\leaderboard.bin"
 
-#define PATH_ASSETS     "data\\assets\\"
-extern char *BasePath;
+#define DIR_DATA           "data\\"
+#define DIR_ASSETS          "data\\assets\\"
 
 static bool FileExists(const char *filename);
 
@@ -26,13 +31,15 @@ static char *AppendToBasePath(char *endOfPath, char *basePath);
 
 extern void FileHandler_Init();
 
+extern struct SaveData *GetDefaultSaveData();
+
 extern struct SaveData *ReadSaveData();
 
-extern bool WriteSaveData(struct SaveData *data);
+extern void WriteSaveData(struct SaveData *data);
 
 extern struct Leaderboard_Entry *ReadLEaderboard();
 
-extern bool WriteLeaderboard(struct Leaderboard_Entry *entry);
+extern void WriteLeaderboard(struct Leaderboard_Entry *entry);
 
 
 #endif
