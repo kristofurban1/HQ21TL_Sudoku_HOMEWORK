@@ -8,6 +8,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 
 /*
@@ -26,6 +27,9 @@ extern void Init_SDL(Uint32 flags);
 
 
 extern void Init_TTF();
+
+
+extern void Init_IMG();
 
 /*
     @brief Creates a new window.

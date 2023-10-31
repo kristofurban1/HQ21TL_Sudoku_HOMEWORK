@@ -26,9 +26,16 @@ void Init_TTF(){
     SDL_verify(TTF_Init());
 }
 
+void Init_IMG(){
+    SetErrorIndentfyer("IMG Initialization.");
+    SDL_verify(IMG_Init(IMG_INIT_PNG));
+}
+
 void INITIALIZE_ALL(){
     Init_SDL(SDL_FLAGS);
     Create_Window(&MainWindow, WindowPosX, WindowPosY, MainWindowWidth, MainWindowHeight, WindowFlags);
     Create_Renderer(MainWindow, &MainRenderer, RendererFlags);
     Init_TTF();
+    Init_IMG();
+    
 }

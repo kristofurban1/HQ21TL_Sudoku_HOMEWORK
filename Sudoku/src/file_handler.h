@@ -28,6 +28,7 @@
 #define DIR_ASSETS          "data\\assets\\"
 
 #define ASSET_FONT          "font.ttf"
+#define ASSET_ICON          "icon.png"
 
 static bool FileExists(const char *filename);
 

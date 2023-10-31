@@ -20,6 +20,11 @@ static char *error_identifyer;
 extern void SetErrorIndentfyer(char *errid);
 
 /*
+    @brief Sets the error message variable.
+*/
+extern void SetErrorMessage(char *errmsg);
+
+/*
     @brief Verifies if malloc if succesful. Raises error if it fails.
 */
 extern void malloc_verify(void *ptr);
@@ -37,6 +42,6 @@ extern void SDL_verify(int err_c);
 /*
     @brief When encountering fatal error, this will print the error message and identifyer then exit without cleanup.
 */
-static void RAISE_ERROR();
+extern void RAISE_ERROR();
 
 #endif

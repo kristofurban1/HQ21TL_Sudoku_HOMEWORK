@@ -12,13 +12,15 @@ extern int main(int argc, char *argv[]) {
     FontManager_Init(); // FontManager
     UIElements_Init();  //UI_Elements
 
-    SDL_SetRenderDrawColor(MainRenderer, 255, 255, 255, 255);
-    SDL_RenderClear(MainRenderer);
-    SDL_RenderPresent(MainRenderer);
+    SDL_SetWindowTitle(MainWindow, WINDOW_TITLE);
+    SDL_Surface *icon = IMG_Load(GetAsset(ASSET_ICON));
+    SDL_SetWindowIcon(MainWindow, icon);
+    SDL_FreeSurface(icon);
 
     UIElements_GenerateStatic();
 
     uint8_t gamestate = GS_TitleScreen;
+    uint8_t gamestate_sudoku = GS_UNSET;
 
     Uint64 timer_forceRender = SDL_GetTicks64();
     Uint64 gamestate_timer = 0;
@@ -34,10 +36,19 @@ extern int main(int argc, char *argv[]) {
                     break;
                 case SDL_WINDOWEVENT:
                     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-                        MainWindowWidth  = event.window.data1;
-                        MainWindowHeight = event.window.data2;
-                        UIElements_GenerateStatic();
+                        bool changed = false;
+                        if (MainWindowWidth >= Minimum_Width)
+                            MainWindowWidth  = event.window.data1;
+                        else { MainWindowWidth = Minimum_Width; changed = true; }
+                        
+                        if (MainWindowHeight >= Minimum_Heigth)
+                            MainWindowHeight = event.window.data2;
+                        else { MainWindowHeight = Minimum_Heigth; changed = true; }
+
+                        if (changed) SDL_SetWindowSize(MainWindow, MainWindowWidth, MainWindowHeight);
+
                         render = true;
+                        UIElements_GenerateStatic();
                     }
 
                     break;
@@ -47,7 +58,6 @@ extern int main(int argc, char *argv[]) {
         }
         if (timer_forceRender + FPS < SDL_GetTicks64()){
             timer_forceRender = SDL_GetTicks64();
-            render = true;
 
             SDL_SetRenderDrawColor(MainRenderer, 0, 0, 0, 255);
             SDL_RenderClear(MainRenderer);
@@ -61,17 +71,40 @@ extern int main(int argc, char *argv[]) {
 
                 SDL_SetRenderDrawColor(MainRenderer, 255, 255, 255, 255);
                 SDL_RenderClear(MainRenderer);
+
                 Render_TextureElement(TitleScreen);
-                SDL_RenderPresent(MainRenderer);
 
                 break;
             
+            case GS_MainMenu:
+                Render_TextureElement(Title);
+                break;
+            case GS_SudokuState:
+                switch (gamestate_sudoku)
+                    {
+                    case GS_Sudoku:
+                        /* code */
+                        break;
+                    case GS_SudokuEndScreen:
+                        break;
+                    case GS_SudokuConfirmCheat:
+                        break;
+                    
+                    default:
+                        SetErrorMessage("Unknown gamestate_sudoku"); SetErrorIndentfyer("main: SudokuState control");
+                        RAISE_ERROR();
+                        break;
+                }
+                break;
+            
             default:
-                SDL_SetRenderDrawColor(MainRenderer, 0, 0, 0, 255);
-                SDL_RenderClear(MainRenderer);
+                SetErrorMessage("Unknown gamestate"); SetErrorIndentfyer("main: GameState control");
+                RAISE_ERROR();
                 break;
             }
             #pragma endregion
+
+            render = true;
         }
         if (render){
             SDL_RenderPresent(MainRenderer);

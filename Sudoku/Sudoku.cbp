@@ -24,6 +24,7 @@
 					<Add option="-l SDL2main" />
 					<Add option="-l SDL2" />
 					<Add option="-l SDL2_ttf" />
+					<Add option="-l SDL2_image" />
 				</Linker>
 			</Target>
 		</Build>
@@ -35,7 +36,8 @@
 			<Add option="-l mingw32" />
 			<Add option="-l SDL2main" />
 			<Add option="-l SDL2dll" />
-					<Add option="-l SDL2_ttfdll" />
+			<Add option="-l SDL2_ttfdll" />
+			<Add option="-l SDL2_imagedll" />
 		</Compiler>
 		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />

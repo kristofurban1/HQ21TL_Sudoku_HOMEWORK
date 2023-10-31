@@ -31,11 +31,11 @@ void UIElements_GenerateStatic(){
     int Tile_w, Title_h;
     Title->texture = RenderFont(MainRenderer, GetFont(), TITLE_SCREEN, Title_fg, &Tile_w, &Title_h);
     SDL_Rect Title_rect;
-        Title_rect.w = (int)SDL_round(MainWindowWidth * 0.4);
+        Title_rect.w = (int)SDL_round(MainWindowWidth * 0.3);
         Title_rect.h = (int)SDL_round(((double)Title_rect.w / Tile_w) * Title_h);
         Title_rect.x = (int)SDL_round((MainWindowWidth / 2.0) - (Title_rect.w / 2));
-        Title_rect.y = (int)SDL_round((MainWindowHeight / 2.0) - (Title_rect.h / 2));
-    TitleScreen->rect = Title_rect;
+        Title_rect.y = (int)SDL_round((MainWindowHeight * 0.03));
+    Title->rect = Title_rect;
     #pragma endregion
 }
 
