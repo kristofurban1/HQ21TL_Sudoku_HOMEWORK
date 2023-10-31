@@ -37,11 +37,17 @@ extern void GC_AppendRenderer(void *renderer){
     GarbageCollector_Renderers[GC_RendererCount -1] = renderer;
 }
 
+void TryFree(void *ptr){
+    if (ptr != NULL) free(ptr);
+}
 
 extern void EXECUTE_CLEANUP(){
-    for (int i = 0; i < GC_Count; i++) free(GarbageCollector[i]);
-    for (int i = 0; i < GC_WindowCount; i++) SDL_DestroyWindow(GarbageCollector_Windows[i]);
-    for (int i = 0; i < GC_RendererCount; i++) SDL_DestroyRenderer(GarbageCollector_Renderers[i]);
+    for (int i = 0; i < GC_Count; i++) 
+        if (GarbageCollector[i] != NULL) free(GarbageCollector[i]);
+    for (int i = 0; i < GC_WindowCount; i++) 
+        if (GarbageCollector_Windows[i] != NULL) SDL_DestroyWindow(GarbageCollector_Windows[i]);
+    for (int i = 0; i < GC_RendererCount; i++) 
+        if (GarbageCollector_Renderers[i] != NULL) SDL_DestroyRenderer(GarbageCollector_Renderers[i]);
 
     free(GarbageCollector);
     free(GarbageCollector_Windows);

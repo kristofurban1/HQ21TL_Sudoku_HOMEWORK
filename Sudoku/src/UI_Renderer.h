@@ -3,6 +3,7 @@
 
 #include "WINDOW_PARAMETERS.h"
 #include "UI_Elements.h"
+#include "debugmalloc.h"
 
 #include <SDL2/SDL.h>
 

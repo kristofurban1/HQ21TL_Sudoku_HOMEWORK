@@ -16,6 +16,8 @@
 #include "UI_Elements.h"
 #include "UI_Renderer.h"
 
+#include "GameState.h"
+
 /*
     Program Main entry point.
     Accepts default argument, these will be ignored.

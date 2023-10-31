@@ -7,6 +7,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "debugmalloc.h"
+
 #define MSG_MALLOC_ERROR "Error: Malloc failed!"
 
 static char *error_message;

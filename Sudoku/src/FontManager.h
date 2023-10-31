@@ -4,9 +4,11 @@
 #include "ErrorHandler.h"
 #include "file_handler.h"
 
+#include "debugmalloc.h"
+
 #include <SDL2/SDL_ttf.h>
 
-#define FontSize 24
+#define FontSize 500
 extern TTF_Font *__FONT__;
 
 extern TTF_Font *LoadFont(int size);

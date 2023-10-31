@@ -4,6 +4,7 @@
 #include "WINDOW_PARAMETERS.h"
 #include "ErrorHandler.h"
 #include "Cleanup.h"
+#include "debugmalloc.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>

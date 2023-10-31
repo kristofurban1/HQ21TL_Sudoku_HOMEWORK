@@ -19,6 +19,8 @@
 
 #include "Cleanup.h"
 
+#include "debugmalloc.h"
+
 #define PATH_SAVEDATA       "data\\savedata.bin"
 #define PATH_LEADERBOARD    "data\\leaderboard.bin"
 

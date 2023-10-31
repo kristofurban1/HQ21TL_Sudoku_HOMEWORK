@@ -59,6 +59,8 @@ extern void GC_AppendWindow(void *window);
 */
 extern void GC_AppendRenderer(void *renderer);
 
+extern void TryFree(void *ptr);
+
 /*
     @brief Frees every appended item. Call at the end of the program.
     @note Uninitializes Cleanup!
