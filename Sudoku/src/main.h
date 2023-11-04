@@ -16,6 +16,8 @@
 #include "UI_Elements.h"
 #include "UI_Renderer.h"
 
+#include "animation_handler.h"
+
 #include "GameState.h"
 
 /*

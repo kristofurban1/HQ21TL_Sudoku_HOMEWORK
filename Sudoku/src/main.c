@@ -25,9 +25,21 @@ extern int main(int argc, char *argv[]) {
     Uint64 timer_forceRender = SDL_GetTicks64();
     Uint64 gamestate_timer = 0;
 
+    
+    SDL_Point p;
+    p.x = 100;
+    p.y = 100;
+
+    SDL_Point target;
+    target.x = 100;
+    target.y = 100;
+
+
     bool render = true;
     bool running = true;
+    Uint64 deltaTime = SDL_GetTicks64();
     while(running){
+        deltaTime = SDL_GetTicks64() - deltaTime;
         SDL_Event event;
         while(SDL_PollEvent(&event)){
             switch(event.type){
@@ -52,6 +64,16 @@ extern int main(int argc, char *argv[]) {
                     }
 
                     break;
+                
+                case SDL_MOUSEBUTTONDOWN:
+                    if (event.button.button == SDL_BUTTON_LEFT){
+                        printf("LeftClick");
+
+                        target.x = event.button.x;
+                        target.y = event.button.y;
+                    }
+
+
                 default:
                     break;
             }
@@ -78,6 +100,12 @@ extern int main(int argc, char *argv[]) {
             
             case GS_MainMenu:
                 Render_TextureElement(Title);
+                SDL_SetRenderDrawColor(MainRenderer, 255, 255, 0, 0);
+
+                p = LerpVect(p, target, 10, deltaTime);
+
+                SDL_RenderDrawPoint(MainRenderer, p.x, p.y);
+
                 break;
             case GS_SudokuState:
                 switch (gamestate_sudoku)
