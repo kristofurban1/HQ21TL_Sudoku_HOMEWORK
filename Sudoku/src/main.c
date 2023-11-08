@@ -10,7 +10,9 @@ extern int main(int argc, char *argv[]) {
     INITIALIZE_ALL();   // SDL
     FileHandler_Init(); // FileHandler
     FontManager_Init(); // FontManager
-    UIElements_Init();  //UI_Elements
+    UIElements_Init();  // UI_Elements
+    Renderer_Init();    // UI_Renderer
+    Gamestate_Init();   // Gamestate
 
     SDL_SetWindowTitle(MainWindow, WINDOW_TITLE);
     SDL_Surface *icon = IMG_Load(GetAsset(ASSET_ICON));
@@ -19,13 +21,10 @@ extern int main(int argc, char *argv[]) {
 
     UIElements_GenerateStatic();
 
-    uint8_t gamestate = GS_TitleScreen;
-    uint8_t gamestate_sudoku = GS_UNSET;
 
     Uint64 timer_forceRender = SDL_GetTicks64();
     Uint64 gamestate_timer = 0;
 
-    
     SDL_Point p;
     p.x = 100;
     p.y = 100;
@@ -34,12 +33,13 @@ extern int main(int argc, char *argv[]) {
     target.x = 100;
     target.y = 100;
 
-
-    bool render = true;
     bool running = true;
-    Uint64 deltaTime = SDL_GetTicks64();
+    Uint64 deltaTime = 0;
+    Uint64 deltaPrev = SDL_GetTicks64();
     while(running){
-        deltaTime = SDL_GetTicks64() - deltaTime;
+        deltaTime = SDL_GetTicks64() - deltaPrev;
+        deltaPrev = SDL_GetTicks64();
+
         SDL_Event event;
         while(SDL_PollEvent(&event)){
             switch(event.type){
@@ -59,7 +59,6 @@ extern int main(int argc, char *argv[]) {
 
                         if (changed) SDL_SetWindowSize(MainWindow, MainWindowWidth, MainWindowHeight);
 
-                        render = true;
                         UIElements_GenerateStatic();
                     }
 
@@ -85,11 +84,16 @@ extern int main(int argc, char *argv[]) {
             SDL_RenderClear(MainRenderer);
 
             #pragma region DrawScreen
-            switch (gamestate)
+            switch (GetGamestate())
             {
             case GS_TitleScreen:
                 if (gamestate_timer == 0) gamestate_timer = SDL_GetTicks64() + GS_TitleScreen_Durration;
-                if (gamestate_timer < SDL_GetTicks64()) {gamestate = GS_MainMenu; gamestate_timer = 0; break; }
+                if (gamestate_timer < SDL_GetTicks64()) {
+                    SetGameState(GS_MainMenu); 
+                    UIElements_GenerateStatic();
+                    gamestate_timer = 0; 
+                    break; 
+                }
 
                 SDL_SetRenderDrawColor(MainRenderer, 255, 255, 255, 255);
                 SDL_RenderClear(MainRenderer);
@@ -101,14 +105,20 @@ extern int main(int argc, char *argv[]) {
             case GS_MainMenu:
                 Render_TextureElement(Title);
                 SDL_SetRenderDrawColor(MainRenderer, 255, 255, 0, 0);
+                p = LerpVect(p, target, 1, deltaTime);
 
-                p = LerpVect(p, target, 10, deltaTime);
-
-                SDL_RenderDrawPoint(MainRenderer, p.x, p.y);
+                SDL_Rect rect;
+                rect.w = 10;
+                rect.h = 10;
+                rect.x = p.x;
+                rect.y = p.y;
+                SDL_RenderDrawRect(MainRenderer, &rect);
+                
+    
 
                 break;
             case GS_SudokuState:
-                switch (gamestate_sudoku)
+                switch (GetSudokustate())
                     {
                     case GS_Sudoku:
                         /* code */
@@ -132,12 +142,9 @@ extern int main(int argc, char *argv[]) {
             }
             #pragma endregion
 
-            render = true;
-        }
-        if (render){
             SDL_RenderPresent(MainRenderer);
-            render = false;
         }
+
         SDL_Delay(1);
     }
 

@@ -1,12 +1,8 @@
 #include "animation_handler.h"
 
 int Lerp(int A, int B, float lerpSpeed, int deltaTime){
-    float f_dt = deltaTime * 0.01;
-
-    float interpVal = 1.0 - SDL_pow(lerpSpeed, f_dt);
-    float C = A + ((B - A) * interpVal);
-
-    return C; 
+    float f_interval = (lerpSpeed * deltaTime);
+    return A + ((B-A) / f_interval); 
 }
 
 SDL_Point LerpVect(SDL_Point A, SDL_Point B, float lerpSpeed, int deltatime){
