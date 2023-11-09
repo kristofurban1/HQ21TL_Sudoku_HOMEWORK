@@ -7,16 +7,10 @@
 
 #include <SDL2/SDL.h>
 
-static int pipeline_count = 0;
-static int pipeline_total = 0; 
-static struct UI_Element *RenderPipeline;
 
-extern void Renderer_Init();
+extern void Render_Label(struct UI_Label *label);
 
-extern void Pipeline_remalloc(int elementsToAdd);
-extern void Pipeline_Append(struct UI_Element *element);
-extern void Renderer_RenderPipeline();
+extern void Render_UIElements();
 
-extern void Render_TextureElement(struct UI_TextureElement *element);
 
 #endif

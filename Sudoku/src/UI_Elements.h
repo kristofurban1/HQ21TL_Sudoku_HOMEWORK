@@ -15,54 +15,65 @@
 #include <SDL2/SDL.h>
 //#include <SDL2/SDL_ttf.h>
 
-#define MainColor_Green {102, 255, 0, 250}
-#define AccentColor_White {255, 255, 255, 255}
-#define TriggeredColor_DarkGreen {70, 200, 30, 100}
-
-#define TITLE_SCREEN "SUDOKU"
-extern struct UI_TextureElement *TitleScreen;
-extern struct UI_TextureElement *Title;
-
 extern int TriggerAreaID_count;
 extern int *TriggerAreaIDs;
+
+extern int ElementCount;
+extern struct UI_Element **UI_Elements;
+
+extern struct UI_Pos{
+    int width, height, x, y;
+} UI_Pos;
 
 extern struct Shape{
     int offset_X, offset_Y;
     int height;
+    int width;
     int *boundrary_start;
     int *boundrary_end;
 } Shape;
 
 extern struct UI_ElementShape{
-    struct Shape *shapes; 
+    struct Shape **shapes; 
     int shapeCount;
+    bool visible;
+    SDL_Color bgcolor;
 } UI_ElementShape;
 
-extern struct UI_TriggerElement{
+extern struct UI_Trigger{
     int TriggerAreaID;
-    struct UI_ElementShape triggerArea;
+    struct UI_ElementShape area;
     bool isTriggered;
-    SDL_Color triggeredColor1;
-    SDL_Color triggeredColor2;
+    bool enabled;
+} UI_Trigger;
 
-} UI_TriggerElement;
-
-extern struct UI_TextureElement{
+extern struct UI_Label{
+    char *text;
     SDL_Rect rect;
     SDL_Texture *texture;
-    SDL_Color color;
-} UI_TextureElement;
+    bool makeFit;
+    bool preferWidthOverHeight;
+    int targetSize_W, targetSize_H;
+    SDL_Color fgcolor;
+    bool visible;
+} UI_Label;
 
 extern struct UI_Element{
-    int posX, posY;
+    int UniqueID;
+    struct UI_Pos pos;
     SDL_Color bgcolor;
+    SDL_Color t_bgcolor;
+    bool hasBackground;
     struct UI_ElementShape background;
-    bool has_trigger;
-    struct UI_TriggerElement trigger;
-    bool has_anim;
+    bool hasLabel;
+    struct UI_Label label;
+    bool hasAnim;
     struct Animation anim;
-    bool has_fg;
-    struct UI_TextureElement foreground;
+    bool hasTrigger;
+    struct UI_Trigger trigger;
+    void (* TriggerCallback) (int);
+    SDL_Color t_fgcolor;
+    bool visible;
 } UI_Element;
 
 extern void UIElements_Init();
@@ -71,8 +82,7 @@ extern void UIElements_Init();
 
 extern void UIElements_GenerateStatic();
 
-extern bool InTriggerAreaOfElement(struct UI_Element *element, SDL_Point point);
+//extern bool InTriggerAreaOfElement(struct UI_Element *element, SDL_Point point);
 
-void UIElements_Generate(struct UI_Element *renderedElements, int element_count, SDL_Point cursorPos, int TriggerAreaID);
 
 #endif

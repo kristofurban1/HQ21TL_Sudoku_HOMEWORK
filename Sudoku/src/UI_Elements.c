@@ -1,72 +1,115 @@
 #include "UI_Elements.h"
 
+#define COLOR_Green {102, 255, 0, 250}
+#define COLOR_White {255, 255, 255, 255}
+#define COLOR_Black {0, 0, 0, 0}
+#define COLOR_DarkGreen {70, 200, 30, 100}
+
+#define TITLE "SUDOKU"
+#define START_LABEL "Play"
+
 struct UI_TextureElement *TitleScreen;
 struct UI_TextureElement *Title;
 
 int TriggerAreaID_count;
 int *TriggerAreaIDs;
 
-void UIElements_Init(){
-    TitleScreen = malloc(sizeof(UI_TextureElement));
-    SetErrorIndentfyer("UI_Elements: GENS_TitleScreen"); malloc_verify(TitleScreen);
-    GC_Append(TitleScreen);
+int ElementCount;
+struct UI_Element **UI_Elements;
 
-    SDL_Color TitleScreen_color = {0, 0, 0, 255};
-    TitleScreen->color = TitleScreen_color;
+void FreeUI_Element(struct UI_Element *element){
+    if (element->hasLabel){
+        TryFree(element->label.text);
+        TryFree(element->label.texture);
+    }
+    if(element->hasTrigger){
+        for (int i = 0; i < element->trigger.area.shapeCount; i++)
+        {
+            TryFree(element->trigger.area.shapes[i]->boundrary_start);
+            TryFree(element->trigger.area.shapes[i]->boundrary_end);
+            TryFree(element->trigger.area.shapes[i]);
+        }
+        TryFree(element->trigger.area.shapes);
+    }
 
-    Title = malloc(sizeof(UI_TextureElement));
-    SetErrorIndentfyer("UI_Elements: GENS_Title"); malloc_verify(Title);
-    GC_Append(Title);
-
-    SDL_Color title_color = MainColor_Green;
-    Title->color = title_color;
-
-    TriggerAreaID_count = 0;
-    TriggerAreaIDs = malloc(0);
+    TryFree(element);
 }
 
-void UIElements_GenerateStatic(){
+void ResetElements(){
+    TryFree(TriggerAreaIDs);
+
+    for(int i = 0; i < ElementCount; i++) FreeUI_Element(UI_Elements[i]);
+    TryFree(UI_Elements);
+    
+    TriggerAreaID_count = 0;
+    TriggerAreaIDs = malloc(0);
+
+    ElementCount = 0;
+    UI_Elements = malloc(0);
+}
+
+void UIElements_Generate(SDL_Point cursorPos, int TriggerAreaID){
+    ResetElements();
     #pragma region TitleScreen
     if (GetGamestate() == GS_TitleScreen){
-        SDL_Color TS_fg = TitleScreen->color;
-        int TS_w, TS_h;
-        TitleScreen->texture = RenderFont(MainRenderer, GetFont(), TITLE_SCREEN, TS_fg, &TS_w, &TS_h);
-        SDL_Rect TS_rect;
-            TS_rect.w = (int)SDL_round(MainWindowWidth * 0.4);
-            TS_rect.h = (int)SDL_round(((double)TS_rect.w / TS_w) * TS_h);
-            TS_rect.x = (int)SDL_round((MainWindowWidth / 2.0) - (TS_rect.w / 2));
-            TS_rect.y = (int)SDL_round((MainWindowHeight / 2.0) - (TS_rect.h / 2));
-        TitleScreen->rect = TS_rect;
+        SetErrorIndentfyer("UIGen: TitleScreen");
+
+        struct UI_Element *TitleScreen = malloc(sizeof(UI_Element)); 
+            malloc_verify(TitleScreen);
+
+        TitleScreen->UniqueID = 1;
+
+        TitleScreen->hasAnim = false;
+        TitleScreen->hasTrigger = false;
+        TitleScreen->TriggerCallback = NULL;
+        TitleScreen->hasBackground = false;
+
+        TitleScreen->pos.x = MainWindowWidth  * 0.5;
+        TitleScreen->pos.y = MainWindowHeight * 0.5;
+        TitleScreen->pos.width  = MainWindowWidth * 0.4;
+        TitleScreen->pos.height =  MainWindowHeight;
+
+        TitleScreen->hasLabel = true;
+        TitleScreen->label.visible = true;
+        char *LabelText = TITLE;
+        TitleScreen->label.text = LabelText;
+        TitleScreen->label.makeFit = false;
+        TitleScreen->label.preferWidthOverHeight = true;
+        TitleScreen->label.targetSize_W = TitleScreen->pos.width;
+        TitleScreen->label.targetSize_H = -1;
+        SDL_Color fgcolor = COLOR_Black;
+        TitleScreen->label.fgcolor = fgcolor;
+
+        ElementCount = 1;
+        UI_Elements = malloc( ElementCount * sizeof(struct UI_Element));
+            malloc_verify(UI_Elements);
+        UI_Elements[0] = TitleScreen;
+        return;
     }
     #pragma endregion
 
     #pragma region Title
     if(GetGamestate() == GS_MainMenu){
-        SDL_Color Title_fg = Title->color;
-        int Tile_w, Title_h;
-        Title->texture = RenderFont(MainRenderer, GetFont(), TITLE_SCREEN, Title_fg, &Tile_w, &Title_h);
-        SDL_Rect Title_rect;
-            Title_rect.w = (int)SDL_round(MainWindowWidth * 0.3);
-            Title_rect.h = (int)SDL_round(((double)Title_rect.w / Tile_w) * Title_h);
-            Title_rect.x = (int)SDL_round((MainWindowWidth / 2.0) - (Title_rect.w / 2));
-            Title_rect.y = (int)SDL_round((MainWindowHeight * 0.03));
-        Title->rect = Title_rect;
+        #pragma region Title
+
+        #pragma endregion
     }
     #pragma endregion
 }
 
-bool InTriggerAreaOfElement(struct UI_Element *element, SDL_Point point){
-    struct Shape *shapes = element->trigger.triggerArea.shapes;
-    for(int shape_index = 0; shape_index < element->trigger.triggerArea.shapeCount; shape_index++){
+/*
+bool InTriggerAreaOfElement(struct UI_Trigger *trigger, SDL_Point point){
+    struct Shape *shapes = trigger->area.shapes;
+    for(int shape_index = 0; shape_index < trigger->area.shapeCount; shape_index++){
         struct Shape *currentShape = &(shapes[shape_index]);
         for (int i = 0; i < currentShape->height; i++)
         {
-            int y = element->posY + currentShape->offset_Y + i;
+            int y = trigger->area.pos.y + currentShape->offset_Y + i;
 
             if (point.y != y) continue;
 
-            int x_start = element->posX + currentShape->offset_X + currentShape->boundrary_start[i];
-            int x_end   = element->posX + currentShape->offset_X +   currentShape->boundrary_end[i];
+            int x_start = trigger->area.pos.x + currentShape->offset_X + currentShape->boundrary_start[i];
+            int x_end   = trigger->area.pos.x + currentShape->offset_X +   currentShape->boundrary_end[i];
 
             if (point.x > x_start && point.x < x_end) return true;
         }
@@ -74,7 +117,7 @@ bool InTriggerAreaOfElement(struct UI_Element *element, SDL_Point point){
     return false;
 }
 
-void UIElements_Generate(struct UI_Element *renderedElements, int element_count, SDL_Point cursorPos, int TriggerAreaID){
+struct UI_Element *UIElements_Generate(int *element_count, SDL_Point cursorPos, int TriggerAreaID){
     #pragma region MainMenu
     if (GetGamestate() == GS_MainMenu){
         #pragma region StartButton
@@ -86,6 +129,9 @@ void UIElements_Generate(struct UI_Element *renderedElements, int element_count,
             int height = width * 0.1;
             int posX = (MainWindowWidth / 2) - (width / 2);
             int posY = (MainWindowHeight * 0.70) - (height / 2);
+            
+            StartButton.background = posX;
+            StartButton->posY = posY;
 
             struct UI_ElementShape btnShape;
                 struct Shape shape;
@@ -150,19 +196,28 @@ void UIElements_Generate(struct UI_Element *renderedElements, int element_count,
                     fg.rect.h = height / 1.1;
                     fg.rect.w = (fg.rect.h / (float)fgh) * fgw;
                 }
-                fg.rect.x = (width / 2) - (fg.rect.w / 2);
-                fg.rect.h = (height / 2) - (fg.rect.h / 2);
+                fg.rect.x = posX + ((width  / 2) - (fg.rect.w / 2));
+                fg.rect.h = posY + ((height / 2) - (fg.rect.h / 2));
 
                 StartButton->foreground = fg;
                 StartButton->has_fg = true;
             
-            StartButton->has_anim = false;
 
             
         }
+            
         #pragma endregion
+        
+        #pragma region MainMenu_RETURN
 
-        #pragma 
+        *element_count = 1;  
+        struct UI_Element **rendered_elements = malloc(*element_count * sizeof(struct UI_Element *));
+        SetErrorIndentfyer("UIElements:Generate ReturnMainMenu"); malloc_verify(*rendered_elements);
+        rendered_elements[0] = StartButton;
+
+        return rendered_elements;
+        #pragma endregion
     }
     #pragma endregion
 }
+*/

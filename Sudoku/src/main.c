@@ -11,7 +11,6 @@ extern int main(int argc, char *argv[]) {
     FileHandler_Init(); // FileHandler
     FontManager_Init(); // FontManager
     UIElements_Init();  // UI_Elements
-    Renderer_Init();    // UI_Renderer
     Gamestate_Init();   // Gamestate
 
     SDL_SetWindowTitle(MainWindow, WINDOW_TITLE);
