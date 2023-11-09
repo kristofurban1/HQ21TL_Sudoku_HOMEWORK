@@ -105,8 +105,6 @@ extern int main(int argc, char *argv[]) {
 
                 Render_UIElements();
 
-        
-
                 SDL_SetRenderDrawColor(MainRenderer, 255, 255, 0, 0);
                 p = LerpVect(p, target, 1, deltaTime);
 
@@ -151,6 +149,7 @@ extern int main(int argc, char *argv[]) {
         SDL_Delay(1);
     }
 
+    ResetElements();
     EXECUTE_CLEANUP();
     TTF_CloseFont(GetFont());
     SDL_Quit();

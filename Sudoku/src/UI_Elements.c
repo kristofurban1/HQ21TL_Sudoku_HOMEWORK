@@ -8,9 +8,6 @@
 #define TITLE "SUDOKU"
 #define START_LABEL "Play"
 
-struct UI_TextureElement *TitleScreen;
-struct UI_TextureElement *Title;
-
 int TriggerAreaID_count;
 int *TriggerAreaIDs;
 
@@ -79,6 +76,7 @@ void UIElements_Generate(){
         SDL_Color fgcolor = COLOR_Black;
         TitleScreen->fgcolor = fgcolor;
         TitleScreen->t_fgcolor = fgcolor;
+        TitleScreen->label.fgcolor = TitleScreen->fgcolor;
         TitleScreen->label.texture = NULL;
 
 
@@ -93,11 +91,35 @@ void UIElements_Generate(){
     #pragma region Title
     if(GetGamestate() == GS_MainMenu){
         SetErrorIndentfyer("UIGen: MainMenu");
-        struct UI_Element *Title       = malloc(sizeof(UI_Element)); 
+        struct UI_Element *Title         = malloc(sizeof(UI_Element)); 
         //struct UI_Element *StartButton = malloc(sizeof(UI_Element)); 
 
         #pragma region Title
+            Title->UniqueID = 1;
 
+            Title->hasAnim = false;
+            Title->hasTrigger = false;
+            Title->TriggerCallback = NULL;
+            Title->hasBackground = false;
+
+            Title->pos.x = MainWindowWidth  * 0.5;
+            Title->pos.y = MainWindowHeight * 0.1;
+            Title->pos.width  = MainWindowWidth * 0.2;
+            Title->pos.height =  MainWindowHeight;
+
+            Title->hasLabel = true;
+            Title->label.visible = true;
+            char *LabelText = TITLE;
+            Title->label.text = LabelText;
+            Title->label.makeFit = false;
+            Title->label.preferWidthOverHeight = true;
+            Title->label.targetSize_W = Title->pos.width;
+            Title->label.targetSize_H = -1;
+            SDL_Color fgcolor = COLOR_Green;
+            Title->fgcolor = fgcolor;
+            Title->t_fgcolor = fgcolor;
+            Title->label.fgcolor = Title->fgcolor;
+            Title->label.texture = NULL;
         #pragma endregion
 
         #pragma region StartButton
