@@ -2,7 +2,7 @@
 
 #define COLOR_Green {102, 255, 0, 250}
 #define COLOR_White {255, 255, 255, 255}
-#define COLOR_Black {0, 0, 0, 0}
+#define COLOR_Black {0, 0, 0, 255}
 #define COLOR_DarkGreen {70, 200, 30, 100}
 
 #define TITLE "SUDOKU"
@@ -19,8 +19,7 @@ struct UI_Element **UI_Elements;
 
 void FreeUI_Element(struct UI_Element *element){
     if (element->hasLabel){
-        TryFree(element->label.text);
-        TryFree(element->label.texture);
+        SDL_DestroyTexture(element->label.texture);
     }
     if(element->hasTrigger){
         for (int i = 0; i < element->trigger.area.shapeCount; i++)
@@ -48,7 +47,7 @@ void ResetElements(){
     UI_Elements = malloc(0);
 }
 
-void UIElements_Generate(SDL_Point cursorPos, int TriggerAreaID){
+void UIElements_Generate(){
     ResetElements();
     #pragma region TitleScreen
     if (GetGamestate() == GS_TitleScreen){
@@ -78,7 +77,10 @@ void UIElements_Generate(SDL_Point cursorPos, int TriggerAreaID){
         TitleScreen->label.targetSize_W = TitleScreen->pos.width;
         TitleScreen->label.targetSize_H = -1;
         SDL_Color fgcolor = COLOR_Black;
-        TitleScreen->label.fgcolor = fgcolor;
+        TitleScreen->fgcolor = fgcolor;
+        TitleScreen->t_fgcolor = fgcolor;
+        TitleScreen->label.texture = NULL;
+
 
         ElementCount = 1;
         UI_Elements = malloc( ElementCount * sizeof(struct UI_Element));
@@ -90,9 +92,24 @@ void UIElements_Generate(SDL_Point cursorPos, int TriggerAreaID){
 
     #pragma region Title
     if(GetGamestate() == GS_MainMenu){
+        SetErrorIndentfyer("UIGen: MainMenu");
+        struct UI_Element *Title       = malloc(sizeof(UI_Element)); 
+        //struct UI_Element *StartButton = malloc(sizeof(UI_Element)); 
+
         #pragma region Title
 
         #pragma endregion
+
+        #pragma region StartButton
+
+        #pragma endregion
+
+        ElementCount = 1;
+        UI_Elements = malloc( ElementCount * sizeof(struct UI_Element));
+            malloc_verify(UI_Elements);
+        UI_Elements[0] = Title;
+        //UI_Elements[1] = StartButton;
+        return;
     }
     #pragma endregion
 }

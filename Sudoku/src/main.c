@@ -10,7 +10,7 @@ extern int main(int argc, char *argv[]) {
     INITIALIZE_ALL();   // SDL
     FileHandler_Init(); // FileHandler
     FontManager_Init(); // FontManager
-    UIElements_Init();  // UI_Elements
+    ResetElements();  // UI_Elements
     Gamestate_Init();   // Gamestate
 
     SDL_SetWindowTitle(MainWindow, WINDOW_TITLE);
@@ -18,7 +18,7 @@ extern int main(int argc, char *argv[]) {
     SDL_SetWindowIcon(MainWindow, icon);
     SDL_FreeSurface(icon);
 
-    UIElements_GenerateStatic();
+    UIElements_Generate();
 
 
     Uint64 timer_forceRender = SDL_GetTicks64();
@@ -58,7 +58,7 @@ extern int main(int argc, char *argv[]) {
 
                         if (changed) SDL_SetWindowSize(MainWindow, MainWindowWidth, MainWindowHeight);
 
-                        UIElements_GenerateStatic();
+                        UIElements_Generate();
                     }
 
                     break;
@@ -79,9 +79,6 @@ extern int main(int argc, char *argv[]) {
         if (timer_forceRender + FPS < SDL_GetTicks64()){
             timer_forceRender = SDL_GetTicks64();
 
-            SDL_SetRenderDrawColor(MainRenderer, 0, 0, 0, 255);
-            SDL_RenderClear(MainRenderer);
-
             #pragma region DrawScreen
             switch (GetGamestate())
             {
@@ -89,20 +86,27 @@ extern int main(int argc, char *argv[]) {
                 if (gamestate_timer == 0) gamestate_timer = SDL_GetTicks64() + GS_TitleScreen_Durration;
                 if (gamestate_timer < SDL_GetTicks64()) {
                     SetGameState(GS_MainMenu); 
-                    UIElements_GenerateStatic();
+                    UIElements_Generate();
                     gamestate_timer = 0; 
                     break; 
                 }
 
                 SDL_SetRenderDrawColor(MainRenderer, 255, 255, 255, 255);
                 SDL_RenderClear(MainRenderer);
-
-                Render_TextureElement(TitleScreen);
+                
+                Render_UIElements();
 
                 break;
             
             case GS_MainMenu:
-                Render_TextureElement(Title);
+        
+                SDL_SetRenderDrawColor(MainRenderer, 0, 0, 0, 255);
+                SDL_RenderClear(MainRenderer);
+
+                Render_UIElements();
+
+        
+
                 SDL_SetRenderDrawColor(MainRenderer, 255, 255, 0, 0);
                 p = LerpVect(p, target, 1, deltaTime);
 

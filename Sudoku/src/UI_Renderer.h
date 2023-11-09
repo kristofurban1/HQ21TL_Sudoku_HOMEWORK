@@ -7,8 +7,8 @@
 
 #include <SDL2/SDL.h>
 
-
-extern void Render_Label(struct UI_Label *label);
+extern void Render_UIElementShape(struct UI_ElementShape *elementShape, struct UI_Pos *pos);
+extern void Render_Label(struct UI_Label *label, struct UI_Pos *pos);
 
 extern void Render_UIElements();
 

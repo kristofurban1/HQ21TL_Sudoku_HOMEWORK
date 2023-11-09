@@ -66,21 +66,20 @@ extern struct UI_Element{
     bool hasBackground;
     struct UI_ElementShape background;
     bool hasLabel;
+    SDL_Color fgcolor;
+    SDL_Color t_fgcolor;
     struct UI_Label label;
     bool hasAnim;
     struct Animation anim;
     bool hasTrigger;
     struct UI_Trigger trigger;
     void (* TriggerCallback) (int);
-    SDL_Color t_fgcolor;
     bool visible;
 } UI_Element;
 
-extern void UIElements_Init();
+extern void ResetElements();
 
-
-
-extern void UIElements_GenerateStatic();
+extern void UIElements_Generate();
 
 //extern bool InTriggerAreaOfElement(struct UI_Element *element, SDL_Point point);
 

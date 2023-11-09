@@ -30,17 +30,16 @@ void Render_UIElementShape(struct UI_ElementShape *elementShape, struct UI_Pos *
     
 }
 
-void RenderLabel(struct UI_Label *label, struct UI_Pos *pos){
-    if (!label->visible) return;
+void Render_Label(struct UI_Label *label, struct UI_Pos *pos){
     int w, h;
-    label->texture = RenderFont(MainRenderer, GetFont(), label->text, label->fgcolor, &w, &h);
+    label->texture = RenderFont(MainRenderer, GetFont(), label->text, label->fgcolor, &(w), &(h));
 
     if (label->makeFit){
         label->rect.w = label->targetSize_W;
         label->rect.h =  (label->rect.w / (float)w) * h;
         if (label->rect.h > label->targetSize_H){
             label->rect.h = label->targetSize_H;
-            label->rect.w =  (label->rect.h / (float)h) * w;
+            label->rect.w =  (label->rect.h / (float)w) * h;
         }
     }
     else{
@@ -56,9 +55,9 @@ void RenderLabel(struct UI_Label *label, struct UI_Pos *pos){
 
     label->rect.x = pos->x - (label->rect.w / 2);
     label->rect.y = pos->y - (label->rect.h / 2);
+    
+    
 
-    int succ = SDL_RenderCopy(MainRenderer, label->texture, NULL, &(label->rect));
-    SetErrorIndentfyer("UI_Renderer: RenderLabel"); SDL_verify(succ);
 }
 
 void Render_UIElements(){
@@ -66,7 +65,18 @@ void Render_UIElements(){
     {
         struct UI_Element *current = UI_Elements[element_index];
 
-        //current->hasTrigger
+        if (current->label.texture == NULL)
+            Render_Label(&(current->label), &(current->pos));
+
+        if(current->hasBackground) 
+            Render_UIElementShape(&(current->background), &(current->pos));
+
+        if(current->hasLabel && current->label.visible)
+        {
+            SetErrorIndentfyer("UI_Renderer: RenderLabel"); 
+            SDL_verify( SDL_RenderCopy(MainRenderer, current->label.texture, NULL, &(current->label.rect)));
+        }
+
     }
     
 }
