@@ -3,6 +3,8 @@
 void Render_UIElementShape(struct UI_ElementShape *elementShape, struct UI_Pos *pos){
     if (!elementShape->visible) return;
 
+    printf("yo");
+
     SDL_SetRenderDrawColor(MainRenderer, 
         elementShape->bgcolor.r, 
         elementShape->bgcolor.g, 
@@ -69,13 +71,15 @@ void Render_UIElements(){
             Render_Label(&(current->label), &(current->pos));
 
         if(current->hasBackground) 
-            Render_UIElementShape(&(current->background), &(current->pos));
+            Render_UIElementShape(current->background, &(current->pos));
 
         if(current->hasLabel && current->label.visible)
         {
             SetErrorIndentfyer("UI_Renderer: RenderLabel"); 
             SDL_verify( SDL_RenderCopy(MainRenderer, current->label.texture, NULL, &(current->label.rect)));
         }
+
+        //printf("UID: %d\n", current->UniqueID);
 
     }
     

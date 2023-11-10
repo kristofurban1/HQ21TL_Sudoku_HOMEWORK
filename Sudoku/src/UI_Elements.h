@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <math.h>
 
+#define M_PI		3.14159265358979323846
+
 #include "WINDOW_PARAMETERS.h"
 #include "ErrorHandler.h"
 #include "Cleanup.h"
@@ -42,7 +44,7 @@ extern struct UI_ElementShape{
 
 extern struct UI_Trigger{
     int TriggerAreaID;
-    struct UI_ElementShape area;
+    struct UI_ElementShape *area;
     bool isTriggered;
     bool enabled;
 } UI_Trigger;
@@ -64,7 +66,7 @@ extern struct UI_Element{
     SDL_Color bgcolor;
     SDL_Color t_bgcolor;
     bool hasBackground;
-    struct UI_ElementShape background;
+    struct UI_ElementShape *background;
     bool hasLabel;
     SDL_Color fgcolor;
     SDL_Color t_fgcolor;
@@ -73,11 +75,14 @@ extern struct UI_Element{
     struct Animation anim;
     bool hasTrigger;
     struct UI_Trigger trigger;
-    void (* TriggerCallback) (int);
+    void (* TriggerCallback) (struct UI_Element *);
     bool visible;
 } UI_Element;
 
 extern void ResetElements();
+
+extern struct UI_Elements *GetByID(int uniqueID);
+
 
 extern void UIElements_Generate();
 
