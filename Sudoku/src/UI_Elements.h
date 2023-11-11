@@ -17,8 +17,7 @@
 #include <SDL2/SDL.h>
 //#include <SDL2/SDL_ttf.h>
 
-extern int TriggerAreaID_count;
-extern int *TriggerAreaIDs;
+#define STARTBUTTON_UID 11
 
 extern int ElementCount;
 extern struct UI_Element **UI_Elements;
@@ -47,6 +46,7 @@ extern struct UI_Trigger{
     struct UI_ElementShape *area;
     bool isTriggered;
     bool enabled;
+    int trigger_stay_ms;
 } UI_Trigger;
 
 extern struct UI_Label{
@@ -56,6 +56,7 @@ extern struct UI_Label{
     bool makeFit;
     bool preferWidthOverHeight;
     int targetSize_W, targetSize_H;
+    int offset_X, offset_Y;
     SDL_Color fgcolor;
     bool visible;
 } UI_Label;
@@ -75,18 +76,19 @@ extern struct UI_Element{
     struct Animation anim;
     bool hasTrigger;
     struct UI_Trigger trigger;
-    void (* TriggerCallback) (struct UI_Element *);
+    void (* TriggerCallback) (int); // int: Sender_UID
     bool visible;
 } UI_Element;
 
 extern void ResetElements();
 
-extern struct UI_Elements *GetByID(int uniqueID);
-
+extern struct UI_Element *UI_GetByID(int uniqueID);
+extern struct UI_Element **UIs_GetByTAID(int triggerAreaID, int *match_count);
+extern bool InTriggerAreaOfElement(struct UI_Element *element, SDL_Point point);
+extern int UI_SearchForTriggeredElement(SDL_Point cursorpos);
 
 extern void UIElements_Generate();
 
-//extern bool InTriggerAreaOfElement(struct UI_Element *element, SDL_Point point);
 
 
 #endif

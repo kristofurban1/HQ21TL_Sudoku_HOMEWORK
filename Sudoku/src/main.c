@@ -19,24 +19,16 @@ extern int main(int argc, char *argv[]) {
     SDL_FreeSurface(icon);
 
     UIElements_Generate();
-
+    Interface_InitCurrentState();
 
     Uint64 timer_forceRender = SDL_GetTicks64();
     Uint64 gamestate_timer = 0;
 
-    SDL_Point p;
-    p.x = 100;
-    p.y = 100;
-
-    SDL_Point target;
-    target.x = 100;
-    target.y = 100;
-
     bool running = true;
-    Uint64 deltaTime = 0;
+    Uint64 deltaTime_ms = 0;
     Uint64 deltaPrev = SDL_GetTicks64();
     while(running){
-        deltaTime = SDL_GetTicks64() - deltaPrev;
+        deltaTime_ms = SDL_GetTicks64() - deltaPrev;
         deltaPrev = SDL_GetTicks64();
 
         SDL_Event event;
@@ -59,18 +51,24 @@ extern int main(int argc, char *argv[]) {
                         if (changed) SDL_SetWindowSize(MainWindow, MainWindowWidth, MainWindowHeight);
 
                         UIElements_Generate();
+                        Interface_InitCurrentState();
                     }
 
                     break;
                 
                 case SDL_MOUSEBUTTONDOWN:
                     if (event.button.button == SDL_BUTTON_LEFT){
-                        printf("LeftClick");
-
-                        target.x = event.button.x;
-                        target.y = event.button.y;
+                        printf("Mouse: LeftClick\n");
+                        SDL_Point clickpos;
+                        clickpos.x = event.button.x;
+                        clickpos.y = event.button.y;
+                        Interface_EventHandler_Mouse(clickpos);
                     }
-
+                    break;
+                case SDL_KEYDOWN:
+                    printf("Keyboard: Buttonpress: %d\n", event.key.keysym.scancode);
+                    Interface_EventHandler_Keyboard(event.key.keysym.scancode);
+                    break;
 
                 default:
                     break;
@@ -87,6 +85,7 @@ extern int main(int argc, char *argv[]) {
                 if (gamestate_timer < SDL_GetTicks64()) {
                     SetGameState(GS_MainMenu); 
                     UIElements_Generate();
+                    Interface_InitCurrentState();
                     gamestate_timer = 0; 
                     break; 
                 }
@@ -103,20 +102,21 @@ extern int main(int argc, char *argv[]) {
                 SDL_SetRenderDrawColor(MainRenderer, 0, 0, 0, 255);
                 SDL_RenderClear(MainRenderer);
 
-                Render_UIElements();
-
-                SDL_SetRenderDrawColor(MainRenderer, 255, 255, 0, 0);
-                p = LerpVect(p, target, 1, deltaTime);
-
-                SDL_Rect rect;
-                rect.w = 10;
-                rect.h = 10;
-                rect.x = p.x;
-                rect.y = p.y;
-                SDL_RenderDrawRect(MainRenderer, &rect);
                 
-    
+                
+                Render_UIElements();                
 
+                SDL_SetRenderDrawColor(MainRenderer, 50, 50, 50, 255);
+                for (int i = 0; i <= 10; i++)
+                {
+                    float p = i * 0.1;
+                    
+                    SDL_RenderDrawLine(MainRenderer, (int)(MainWindowWidth * p), 0, (int)(MainWindowWidth * p), MainWindowHeight);
+                    SDL_RenderDrawLine(MainRenderer, 0, (int)(MainWindowHeight * p), MainWindowWidth, (int)(MainWindowHeight * p));
+
+                }
+                
+                
                 break;
             case GS_SudokuState:
                 switch (GetSudokustate())

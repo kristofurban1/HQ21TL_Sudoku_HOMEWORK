@@ -3,8 +3,6 @@
 void Render_UIElementShape(struct UI_ElementShape *elementShape, struct UI_Pos *pos){
     if (!elementShape->visible) return;
 
-    printf("yo");
-
     SDL_SetRenderDrawColor(MainRenderer, 
         elementShape->bgcolor.r, 
         elementShape->bgcolor.g, 
@@ -29,6 +27,7 @@ void Render_UIElementShape(struct UI_ElementShape *elementShape, struct UI_Pos *
             SDL_RenderDrawLine(MainRenderer, X_start, Y, X_end, Y);
         }
     }
+
     
 }
 
@@ -55,14 +54,14 @@ void Render_Label(struct UI_Label *label, struct UI_Pos *pos){
         }
     }
 
-    label->rect.x = pos->x - (label->rect.w / 2);
-    label->rect.y = pos->y - (label->rect.h / 2);
+    label->rect.x = pos->x - (label->rect.w / 2) + label->offset_X;
+    label->rect.y = pos->y - (label->rect.h / 2) + label->offset_Y;
     
     
 
 }
 
-void Render_UIElements(){
+void Render_UIElements(Uint64 deltatime_ms){
     for (int element_index = 0; element_index < ElementCount; element_index++)
     {
         struct UI_Element *current = UI_Elements[element_index];
@@ -70,8 +69,10 @@ void Render_UIElements(){
         if (current->label.texture == NULL)
             Render_Label(&(current->label), &(current->pos));
 
-        if(current->hasBackground) 
+        if(current->hasBackground){
+
             Render_UIElementShape(current->background, &(current->pos));
+        }
 
         if(current->hasLabel && current->label.visible)
         {
@@ -79,63 +80,16 @@ void Render_UIElements(){
             SDL_verify( SDL_RenderCopy(MainRenderer, current->label.texture, NULL, &(current->label.rect)));
         }
 
-        //printf("UID: %d\n", current->UniqueID);
-
-    }
-    
-}
-
-/*
-void Render_TextureElement(struct UI_TextureElement *element){
-    SetErrorIndentfyer("UI_Renderer_RenderTexture: element null"); malloc_verify(element);
-    int succ = SDL_RenderCopy(MainRenderer, element->texture, NULL, &(element->rect));
-    SetErrorIndentfyer("UI_Renderer_RenderTexture"); SDL_verify(succ);
-}
-
-void RenderElements(SDL_Point cursorPos, int TriggerAreaID){
-    int elementCount;
-    struct UI_Element **elements = UIElements_Generate(&elementCount, cursorPos, TriggerAreaID);
-
-    for (int i = 0; i < elementCount; i++)
-    {
-        struct UI_Element *element = elements[i];
-        
-        #pragma region BG
-            struct Shape *shapes = element->background.shapes;
-            SDL_Color *bg_color = &(element->bgcolor);
-            SDL_SetRenderDrawColor(MainRenderer, bg_color->r, bg_color->g, bg_color->b, bg_color->a);
-            for (int i = 0; i < element->background.shapeCount; i++)
-            {
-                struct Shape *shape = &(shapes[i]);
-
-                int *b_start = (shape->boundrary_start);
-                int *b_end   = (shape->boundrary_end);
-
-                for (int _h = 0; _h < shape->height; _h++)
-                {
-                    int Y = element->posY + shape->offset_Y + _h;
-
-                    int X_start = element->posX + shape->offset_X + b_start[_h];
-                    int X_end   = element->posX + shape->offset_X +   b_end[_h];
-
-                    SDL_RenderDrawLine(MainRenderer, X_start, Y, X_end, Y);
-                }
-
-                TryFree(b_end);
-                TryFree(b_start);
-                TryFree(shape);
+        if (current->trigger.isTriggered){
+            current->trigger.trigger_stay_ms -= deltatime_ms;
+            if (current->trigger.trigger_stay_ms <= 0){
+                current->trigger.isTriggered = false;
+                if (current->hasBackground) current->background->bgcolor = current->bgcolor;
+                if (current->hasLabel) current->label.fgcolor = current->fgcolor;
             }
-            TryFree(shapes);
-        #pragma endregion
 
-        Render_TextureElement(&(element->foreground));
+        }
 
-        
-
-
-        TryFree(element);
     }
-    TryFree(elements);
     
 }
-*/

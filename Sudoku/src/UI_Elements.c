@@ -1,23 +1,77 @@
 #include "UI_Elements.h"
 
 #define COLOR_Green         {102, 255, 0, 250}
-#define COLOR_White         {255, 255, 255, 255}
-#define COLOR_Black         {0, 0, 0, 255}
 #define COLOR_DarkGreen     {70, 200, 30, 100}
+#define COLOR_White         {255, 255, 255, 255}
+#define COLOR_Gray          {80, 80, 80, 255}
+#define COLOR_Black         {0, 0, 0, 255}
 
 #define TITLE "SUDOKU"
 #define START_LABEL "Play"
 
 SDL_Color C_Green       = COLOR_Green;
-SDL_Color C_White       = COLOR_White;
-SDL_Color C_Black       = COLOR_Black;
 SDL_Color C_DarkGreen   = COLOR_DarkGreen;
-
-int TriggerAreaID_count;
-int *TriggerAreaIDs;
+SDL_Color C_White       = COLOR_White;
+SDL_Color C_Gray        = COLOR_Gray;
+SDL_Color C_Black       = COLOR_Black;
 
 int ElementCount;
 struct UI_Element **UI_Elements;
+
+struct UI_Element *UI_GetByID(int uniqueID){
+    for (int i = 0; i < ElementCount; i++)
+        if (UI_Elements[i]->UniqueID == uniqueID) return (UI_Elements[i]);
+    
+    return NULL;
+}
+
+struct UI_Element **UIs_GetByTAID(int triggerAreaID, int *match_count){
+    SetErrorIndentfyer("UI_GetByTAID");
+    struct UI_Element **matches = malloc(sizeof(UI_Element) * ElementCount);
+        malloc_verify(matches);
+    *match_count = 0;
+    for (int i = 0; i < ElementCount; i++){
+        if (!UI_Elements[i]->hasTrigger) continue;
+
+        if (UI_Elements[i]->trigger.TriggerAreaID == triggerAreaID){
+            matches[*match_count] = UI_Elements[i];
+            (*match_count)++;
+        }
+    }
+    matches = realloc(matches, sizeof(struct UI_Element) * (*match_count));
+        malloc_verify(matches);
+    return matches;
+}
+
+bool InTriggerAreaOfElement(struct UI_Element *element, SDL_Point point){
+    for (int shape_index = 0; shape_index < element->trigger.area->shapeCount; shape_index++)
+    {
+        struct Shape *current = element->trigger.area->shapes[shape_index];
+
+        int Y_start = (element->pos.y - (current->height / 2)) + current->offset_Y;
+        int Y_end = current->height + Y_start;
+
+        if (!(Y_start <= point.y && Y_end >= point.y)) continue;
+
+        int _X = current->offset_X + element->pos.x  - (current->width / 2);
+
+        int X_start = current->boundrary_start[point.y - Y_start] + _X;
+        int X_end   = current->boundrary_end[point.y - Y_start]   + _X;
+
+        printf("UID: %d; MOUSE: {%d, %d}; Start:End: {%d, %d}\n", element->UniqueID, point.x, point.y, X_start, X_end);
+        if (X_start <= point.x && X_end >= point.x) return true;
+    }
+    return false;
+}
+
+int UI_SearchForTriggeredElement(SDL_Point cursorpos){
+    for (int i = ElementCount-1; i >= 0; i--){
+        if (!UI_Elements[i]->hasTrigger) continue;
+        printf("Search: CUID: %d\n", UI_Elements[i]->UniqueID);
+        if (InTriggerAreaOfElement(UI_Elements[i], cursorpos)) return UI_Elements[i]->UniqueID;
+    }
+    return -1;
+}
 
 void FreeUI_Element(struct UI_Element *element){
     if (element->hasLabel){
@@ -26,13 +80,10 @@ void FreeUI_Element(struct UI_Element *element){
 
     struct UI_ElementShape *es_T = NULL;
     struct UI_ElementShape *es_B = NULL;
-    if(element->hasTrigger){
-        es_T = element->trigger.area;
-        TryFree(element->trigger.area);
-    }
 
+    if(element->hasTrigger) es_T = element->trigger.area;
     if (element->hasBackground && es_T != element->background) es_B = element->background;
-
+    
     if (es_T != NULL){
         for (int i = 0; i < es_T->shapeCount; i++)
         {
@@ -40,6 +91,8 @@ void FreeUI_Element(struct UI_Element *element){
             TryFree(es_T->shapes[i]->boundrary_end);
             TryFree(es_T->shapes[i]);
         }
+        TryFree(es_T->shapes);
+        TryFree(es_T);
     }
 
     if (es_B != NULL){
@@ -49,19 +102,17 @@ void FreeUI_Element(struct UI_Element *element){
             TryFree(es_B->shapes[i]->boundrary_end);
             TryFree(es_B->shapes[i]);
         }
+        TryFree(es_B->shapes);
+        TryFree(es_B);
     }
 
     TryFree(element);
 }
 
 void ResetElements(){
-    TryFree(TriggerAreaIDs);
 
     for(int i = 0; i < ElementCount; i++) FreeUI_Element(UI_Elements[i]);
     TryFree(UI_Elements);
-    
-    TriggerAreaID_count = 0;
-    TriggerAreaIDs = malloc(0);
 
     ElementCount = 0;
     UI_Elements = malloc(0);
@@ -96,6 +147,9 @@ void UIElements_Generate(){
         TitleScreen->label.preferWidthOverHeight = true;
         TitleScreen->label.targetSize_W = TitleScreen->pos.width;
         TitleScreen->label.targetSize_H = -1;
+        TitleScreen->label.offset_X = 0;
+        TitleScreen->label.offset_Y = 0;
+            
         TitleScreen->label.fgcolor = C_Black;
         TitleScreen->label.texture = NULL;
 
@@ -111,8 +165,8 @@ void UIElements_Generate(){
     #pragma region Title
     if(GetGamestate() == GS_MainMenu){
         SetErrorIndentfyer("UIGen: MainMenu");
-        struct UI_Element *Title         = malloc(sizeof(UI_Element)); 
-        struct UI_Element *StartButton   = malloc(sizeof(UI_Element)); 
+        struct UI_Element *Title         = malloc(sizeof(UI_Element)); malloc_verify(Title);
+        struct UI_Element *StartButton   = malloc(sizeof(UI_Element)); malloc_verify(StartButton);
 
         #pragma region Title
             Title->UniqueID = 10;
@@ -135,22 +189,25 @@ void UIElements_Generate(){
             Title->label.preferWidthOverHeight = true;
             Title->label.targetSize_W = Title->pos.width;
             Title->label.targetSize_H = -1;
+            Title->label.offset_X = 0;
+            Title->label.offset_Y = 0;
             Title->label.fgcolor = C_Green;
             Title->label.texture = NULL;
         #pragma endregion
 
+                    
         #pragma region StartButton
-            StartButton->UniqueID = 11;
+            StartButton->UniqueID = STARTBUTTON_UID;
 
             StartButton->hasAnim = false;
             StartButton->hasLabel = true;
             StartButton->hasBackground = true;
             StartButton->hasTrigger = true;
 
+            StartButton->pos.width = MainWindowWidth * 0.3;
+            StartButton->pos.height = MainWindowHeight * 0.1;
             StartButton->pos.x = MainWindowWidth * 0.5;
-            StartButton->pos.y = MainWindowWidth * 0.8;
-            StartButton->pos.width = MainWindowWidth * 0.15;
-            StartButton->pos.height = MainWindowHeight * 0.05;
+            StartButton->pos.y = MainWindowHeight * 0.8;
 
             StartButton->label.visible = true;
             char *SB_LabelText = START_LABEL;
@@ -159,49 +216,62 @@ void UIElements_Generate(){
             StartButton->label.makeFit = true;
             StartButton->label.targetSize_W = StartButton->pos.width * 0.7;
             StartButton->label.targetSize_H = StartButton->pos.height * 0.9;
-            StartButton->label.fgcolor = C_Black;
-            StartButton->fgcolor = C_Black;
-            StartButton->t_fgcolor = C_White;
+            StartButton->label.offset_X = 0;
+            StartButton->label.offset_Y = StartButton->pos.height * 0.1;
+            
+            StartButton->label.fgcolor = C_Gray;
+            StartButton->fgcolor = C_Gray;
+            StartButton->t_fgcolor = C_Green;
 
             struct UI_ElementShape *btnShape = malloc(sizeof(struct UI_ElementShape));
                 malloc_verify(btnShape);
-                struct Shape shape;
-                    shape.height = StartButton->pos.height;
-                    shape.offset_X = 0;
-                    shape.offset_Y = 0;
-                    shape.boundrary_start = malloc(StartButton->pos.height * sizeof(int)); malloc_verify(shape.boundrary_start);
-                    int *b_start = shape.boundrary_start;
-                    shape.boundrary_end = malloc(StartButton->pos.height * sizeof(int)); malloc_verify(shape.boundrary_end);
-                    int *b_end = shape.boundrary_end;
+                btnShape->shapeCount = 1;
+                btnShape->shapes = malloc(btnShape->shapeCount * sizeof(Shape));
+                    malloc_verify(btnShape->shapes);
+                    btnShape->shapes[0] = malloc(sizeof(struct Shape));
+                        malloc_verify(btnShape->shapes[0]);
+                    btnShape->shapes[0]->height = StartButton->pos.height;
+                    btnShape->shapes[0]->boundrary_start = malloc(StartButton->pos.height * sizeof(int)); malloc_verify(btnShape->shapes[0]->boundrary_start);
+                    int *b_start = btnShape->shapes[0]->boundrary_start;
+                    btnShape->shapes[0]->boundrary_end = malloc(StartButton->pos.height * sizeof(int)); malloc_verify(btnShape->shapes[0]->boundrary_end);
+                    int *b_end = btnShape->shapes[0]->boundrary_end;
 
+                    int minS = INT32_MAX;
+                    int maxE = INT32_MIN;
+                    
                     for (int i = 0; i < 90; i++)
                     {
                         float rad = i * (M_PI / 180);
                         int y = (StartButton->pos.height/2) * sin(rad);
-                        int x = (StartButton->pos.height/2) * cos(rad);
+                        int x = (StartButton->pos.height/2) * (1 - cos(rad));
 
-                        b_start[(StartButton->pos.height / 2) - y] = StartButton->pos.height - x;
-                        b_start[(StartButton->pos.height / 2) + y] = StartButton->pos.height - x;
+                        b_start[(StartButton->pos.height / 2) - y] = x;
+                        b_start[(StartButton->pos.height / 2) + y] = x;
+                        
+                        if (b_start[(StartButton->pos.height / 2) - y] < minS) minS = b_start[(StartButton->pos.height / 2) - y];
+                        if (b_start[(StartButton->pos.height / 2) + y] < minS) minS = b_start[(StartButton->pos.height / 2) + y];
 
-                        b_end[(StartButton->pos.height / 2) - y] = StartButton->pos.width - (StartButton->pos.height - x);
-                        b_end[(StartButton->pos.height / 2) + y] = StartButton->pos.width - (StartButton->pos.height - x);
+                        b_end[(StartButton->pos.height / 2) - y] = StartButton->pos.width - x;
+                        b_end[(StartButton->pos.height / 2) + y] = StartButton->pos.width - x;
+                        if (b_end[(StartButton->pos.height / 2) - y] > maxE) maxE = b_end[(StartButton->pos.height / 2) - y];
+                        if (b_end[(StartButton->pos.height / 2) + y] > maxE) maxE = b_end[(StartButton->pos.height / 2) + y];
                     }
-                    
 
-                btnShape->shapeCount = 1;
-
-                btnShape->shapes = malloc(btnShape->shapeCount * sizeof(Shape));
-                    malloc_verify(btnShape->shapes);
-                    btnShape->shapes[0] = &shape;
+                    btnShape->shapes[0]->width = maxE - minS;
+                    btnShape->shapes[0]->offset_X = 0;-(btnShape->shapes[0]->width/2);
+                    btnShape->shapes[0]->offset_Y = 0;-(btnShape->shapes[0]->height/2);
             
             StartButton->background = btnShape;
+            StartButton->background->bgcolor = C_Green;
             StartButton->bgcolor = C_Green;
             StartButton->t_bgcolor = C_DarkGreen;
+            StartButton->background->visible = true;
 
             StartButton->trigger.area = btnShape;
             StartButton->trigger.enabled = true;
-            StartButton->trigger.TriggerAreaID = 1;
-
+            StartButton->trigger.TriggerAreaID = 30;
+            StartButton->trigger.trigger_stay_ms = 0;
+            
 
             ;
         #pragma endregion
@@ -215,128 +285,3 @@ void UIElements_Generate(){
     }
     #pragma endregion
 }
-
-/*
-bool InTriggerAreaOfElement(struct UI_Trigger *trigger, SDL_Point point){
-    struct Shape *shapes = trigger->area.shapes;
-    for(int shape_index = 0; shape_index < trigger->area.shapeCount; shape_index++){
-        struct Shape *currentShape = &(shapes[shape_index]);
-        for (int i = 0; i < currentShape->height; i++)
-        {
-            int y = trigger->area.pos.y + currentShape->offset_Y + i;
-
-            if (point.y != y) continue;
-
-            int x_start = trigger->area.pos.x + currentShape->offset_X + currentShape->boundrary_start[i];
-            int x_end   = trigger->area.pos.x + currentShape->offset_X +   currentShape->boundrary_end[i];
-
-            if (point.x > x_start && point.x < x_end) return true;
-        }
-    }
-    return false;
-}
-
-struct UI_Element *UIElements_Generate(int *element_count, SDL_Point cursorPos, int TriggerAreaID){
-    #pragma region MainMenu
-    if (GetGamestate() == GS_MainMenu){
-        #pragma region StartButton
-        struct UI_Element *StartButton = malloc(sizeof(UI_Element));
-        SetErrorIndentfyer("UI_Elements: Generate Startbutton"); malloc_verify(StartButton);
-        {
-            char *fg_text = "Play";
-            int width = MainWindowWidth * 0.3;
-            int height = width * 0.1;
-            int posX = (MainWindowWidth / 2) - (width / 2);
-            int posY = (MainWindowHeight * 0.70) - (height / 2);
-            
-            StartButton.background = posX;
-            StartButton->posY = posY;
-
-            struct UI_ElementShape btnShape;
-                struct Shape shape;
-                    shape.height = height;
-                    shape.offset_X = 0;
-                    shape.offset_Y = 0;
-                    shape.boundrary_start = malloc(height * sizeof(int)); malloc_verify(shape.boundrary_start);
-                    int *b_start = shape.boundrary_start;
-                    shape.boundrary_end = malloc(height * sizeof(int)); malloc_verify(shape.boundrary_end);
-                    int *b_end = shape.boundrary_end;
-
-                    for (int i = 0; i < 90; i++)
-                    {
-                        float rad = i * (M_PI / 180);
-                        int y = (height/2) * sin(rad);
-                        int x = (height/2) * cos(rad);
-
-                        b_start[(height / 2) - y] = height - x;
-                        b_start[(height / 2) + y] = height - x;
-
-                        b_end[(height / 2) - y] = width - (height - x);
-                        b_end[(height / 2) + y] = width - (height - x);
-                    }
-                    
-
-                btnShape.shapeCount = 1;
-
-                btnShape.shapes = malloc(btnShape.shapeCount * sizeof(Shape));
-                    malloc_verify(btnShape.shapes);
-                struct Shape *shapes_ptr = btnShape.shapes;
-                    shapes_ptr[0] = shape;
-            
-            StartButton->has_trigger = true;
-            StartButton->trigger.triggerArea = btnShape;
-            StartButton->trigger.TriggerAreaID = 1;
-            if (TriggerAreaID == -1 && cursorPos.x+cursorPos.y != -2){
-                StartButton->trigger.isTriggered = InTriggerAreaOfElement(StartButton, cursorPos);
-            }
-            else if(TriggerAreaID == StartButton->trigger.TriggerAreaID){
-                StartButton->trigger.isTriggered = true;
-            }
-
-            SDL_Color bg_color = MainColor_Green;
-            StartButton->bgcolor = bg_color;
-            if (StartButton->has_trigger && StartButton->trigger.isTriggered)
-                StartButton->bgcolor = StartButton->trigger.triggeredColor2;
-
-            StartButton->background = btnShape;
-
-            struct UI_TextureElement fg;
-                SDL_Color fg_color = AccentColor_White;
-                fg.color =  fg_color;
-                if (StartButton->has_trigger && StartButton->trigger.isTriggered)
-                    fg.color = StartButton->trigger.triggeredColor1;
-                
-                int fgw, fgh;
-                fg.texture = RenderFont(MainRenderer, GetFont(), fg_text, fg.color, &fgw, &fgh);
-
-                fg.rect.w = width * 0.5;
-                fg.rect.h = (fg.rect.w / (float)fgw) * fgh;
-                if (fg.rect.h + (fg.rect.h * 1.1) > height){
-                    fg.rect.h = height / 1.1;
-                    fg.rect.w = (fg.rect.h / (float)fgh) * fgw;
-                }
-                fg.rect.x = posX + ((width  / 2) - (fg.rect.w / 2));
-                fg.rect.h = posY + ((height / 2) - (fg.rect.h / 2));
-
-                StartButton->foreground = fg;
-                StartButton->has_fg = true;
-            
-
-            
-        }
-            
-        #pragma endregion
-        
-        #pragma region MainMenu_RETURN
-
-        *element_count = 1;  
-        struct UI_Element **rendered_elements = malloc(*element_count * sizeof(struct UI_Element *));
-        SetErrorIndentfyer("UIElements:Generate ReturnMainMenu"); malloc_verify(*rendered_elements);
-        rendered_elements[0] = StartButton;
-
-        return rendered_elements;
-        #pragma endregion
-    }
-    #pragma endregion
-}
-*/

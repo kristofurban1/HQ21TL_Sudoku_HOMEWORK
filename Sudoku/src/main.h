@@ -19,6 +19,7 @@
 #include "animation_handler.h"
 
 #include "GameState.h"
+#include "Interface.h"
 
 /*
     Program Main entry point.
