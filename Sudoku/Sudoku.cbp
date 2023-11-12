@@ -43,14 +43,24 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="src/animation_handler.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/animation_handler.h" />
 		<Unit filename="src/Cleanup.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/Cleanup.h" />
+		<Unit filename="src/datastructures.h" />
+		<Unit filename="src/debugmalloc.h" />
 		<Unit filename="src/ErrorHandler.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/ErrorHandler.h" />
+		<Unit filename="src/file_handler.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/file_handler.h" />
 		<Unit filename="src/FontManager.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -63,6 +73,22 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/Init.h" />
+		<Unit filename="src/Interface.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/Interface.h" />
+		<Unit filename="src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/main.h" />
+		<Unit filename="src/main_menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/main_menu.h" />
+		<Unit filename="src/SudokuInterface.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/SudokuInterface.h" />
 		<Unit filename="src/UI_Elements.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -72,20 +98,7 @@
 		</Unit>
 		<Unit filename="src/UI_Renderer.h" />
 		<Unit filename="src/WINDOW_PARAMETERS.h" />
-		<Unit filename="src/animation_handler.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/animation_handler.h" />
-		<Unit filename="src/datastructures.h" />
-		<Unit filename="src/debugmalloc.h" />
-		<Unit filename="src/file_handler.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/file_handler.h" />
-		<Unit filename="src/main.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/main.h" />
+		
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
