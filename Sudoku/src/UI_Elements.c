@@ -8,6 +8,7 @@
 
 #define TITLE "SUDOKU"
 #define START_LABEL "Play"
+#define BACK_LABEL "Back"
 
 SDL_Color C_Green       = COLOR_Green;
 SDL_Color C_DarkGreen   = COLOR_DarkGreen;
@@ -282,6 +283,84 @@ void UIElements_Generate(){
         UI_Elements[0] = Title;
         UI_Elements[1] = StartButton;
         return;
+    }
+    #pragma endregion
+
+    #pragma region Sudoku
+    if(GetGamestate() == GS_SudokuState){
+        SetErrorIndentfyer("UIGen: Sudoku");
+        struct UI_Element *BackButton   = malloc(sizeof(UI_Element)); malloc_verify(BackButton);
+
+        #pragma region BackButton
+            BackButton->UniqueID = BACKBUTTON_UID;
+
+            BackButton->hasAnim = false;
+            BackButton->hasLabel = true;
+            BackButton->hasBackground = true;
+            BackButton->hasTrigger = true;
+
+            BackButton->pos.width = MainWindowWidth * 0.1;
+            BackButton->pos.height = MainWindowHeight * 0.05;
+            BackButton->pos.x = MainWindowWidth * 0.01 + BackButton->pos.width / 2;
+            BackButton->pos.y = MainWindowWidth * 0.01 + BackButton->pos.height / 2;
+
+            BackButton->label.visible = true;
+            char *BB_LabelText = BACK_LABEL;
+            BackButton->label.text = BB_LabelText;
+            BackButton->label.texture = NULL;
+            BackButton->label.makeFit = false;
+            BackButton->label.preferWidthOverHeight = false;
+            BackButton->label.targetSize_W = BackButton->pos.width * 1;
+            BackButton->label.targetSize_H = BackButton->pos.height * 1;
+            BackButton->label.offset_X = 0;
+            BackButton->label.offset_Y = BackButton->pos.height * 0.1;
+            
+            BackButton->label.fgcolor = C_Gray;
+            BackButton->fgcolor = C_Gray;
+            BackButton->t_fgcolor = C_Green;
+
+            struct UI_ElementShape *btn1Shape = malloc(sizeof(struct UI_ElementShape));
+                malloc_verify(btn1Shape);
+                btn1Shape->shapeCount = 1;
+                btn1Shape->shapes = malloc(btn1Shape->shapeCount * sizeof(Shape));
+                    malloc_verify(btn1Shape->shapes);
+                    btn1Shape->shapes[0] = malloc(sizeof(struct Shape));
+                        malloc_verify(btn1Shape->shapes[0]);
+                    btn1Shape->shapes[0]->height = BackButton->pos.height;
+                    btn1Shape->shapes[0]->boundrary_start = malloc(BackButton->pos.height * sizeof(int)); malloc_verify(btn1Shape->shapes[0]->boundrary_start);
+                    int *b_start = btn1Shape->shapes[0]->boundrary_start;
+                    btn1Shape->shapes[0]->boundrary_end = malloc(BackButton->pos.height * sizeof(int)); malloc_verify(btn1Shape->shapes[0]->boundrary_end);
+                    int *b_end = btn1Shape->shapes[0]->boundrary_end;
+
+
+                    for (int i = 0; i < BackButton->pos.height; i++)
+                    {
+                        btn1Shape->shapes[0]->boundrary_start[i] = 0;
+                        btn1Shape->shapes[0]->boundrary_end[i]   = BackButton->pos.width;
+                    }
+
+                    btn1Shape->shapes[0]->width = BackButton->pos.width;
+                    btn1Shape->shapes[0]->offset_X = 0;
+                    btn1Shape->shapes[0]->offset_Y = 0;
+            
+            BackButton->background = btn1Shape;
+            BackButton->background->bgcolor = C_Green;
+            BackButton->bgcolor = C_Green;
+            BackButton->t_bgcolor = C_DarkGreen;
+            BackButton->background->visible = true;
+
+            BackButton->trigger.area = btn1Shape;
+            BackButton->trigger.enabled = true;
+            BackButton->trigger.TriggerAreaID = 30;
+            BackButton->trigger.trigger_stay_ms = 0;
+        #pragma endregion
+
+        ElementCount = 1;
+        UI_Elements = malloc( ElementCount * sizeof(struct UI_Element));
+            malloc_verify(UI_Elements);
+        UI_Elements[0] = BackButton;
+        return;
+        
     }
     #pragma endregion
 }

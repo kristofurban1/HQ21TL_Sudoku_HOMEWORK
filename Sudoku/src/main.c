@@ -1,5 +1,7 @@
 #include "main.h"
 
+#define SHOW_SCREEN_DIV true
+
 int MainWindowWidth  = Default_WIDTH;
 int MainWindowHeight = Default_HEIGHT;
 SDL_Window *MainWindow      = NULL;
@@ -102,27 +104,16 @@ extern int main(int argc, char *argv[]) {
                 SDL_SetRenderDrawColor(MainRenderer, 0, 0, 0, 255);
                 SDL_RenderClear(MainRenderer);
 
-                
-                
-                Render_UIElements();                
-
-                SDL_SetRenderDrawColor(MainRenderer, 50, 50, 50, 255);
-                for (int i = 0; i <= 10; i++)
-                {
-                    float p = i * 0.1;
-                    
-                    SDL_RenderDrawLine(MainRenderer, (int)(MainWindowWidth * p), 0, (int)(MainWindowWidth * p), MainWindowHeight);
-                    SDL_RenderDrawLine(MainRenderer, 0, (int)(MainWindowHeight * p), MainWindowWidth, (int)(MainWindowHeight * p));
-
-                }
-                
+                Render_UIElements();
                 
                 break;
             case GS_SudokuState:
                 switch (GetSudokustate())
                     {
                     case GS_Sudoku:
-                        /* code */
+                        SDL_SetRenderDrawColor(MainRenderer, 0, 0, 0, 255);
+                        SDL_RenderClear(MainRenderer);
+                        Render_UIElements();
                         break;
                     case GS_SudokuEndScreen:
                         break;
@@ -142,6 +133,18 @@ extern int main(int argc, char *argv[]) {
                 break;
             }
             #pragma endregion
+
+            if (SHOW_SCREEN_DIV){
+                SDL_SetRenderDrawColor(MainRenderer, 50, 50, 50, 255);
+                for (int i = 0; i <= 10; i++)
+                {
+                    float p = i * 0.1;
+                    
+                    SDL_RenderDrawLine(MainRenderer, (int)(MainWindowWidth * p), 0, (int)(MainWindowWidth * p), MainWindowHeight);
+                    SDL_RenderDrawLine(MainRenderer, 0, (int)(MainWindowHeight * p), MainWindowWidth, (int)(MainWindowHeight * p));
+
+                }
+            }
 
             SDL_RenderPresent(MainRenderer);
         }

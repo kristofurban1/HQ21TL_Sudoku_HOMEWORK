@@ -18,6 +18,7 @@
 //#include <SDL2/SDL_ttf.h>
 
 #define STARTBUTTON_UID 11
+#define BACKBUTTON_UID 21
 
 extern int ElementCount;
 extern struct UI_Element **UI_Elements;

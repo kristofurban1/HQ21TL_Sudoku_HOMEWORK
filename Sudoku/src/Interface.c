@@ -11,17 +11,22 @@ void Interface_InitCurrentState(){
         startbutton->TriggerCallback = &MM_Callback_StartButton_Pressed;
         break;
     
+    case GS_SudokuState:
+        struct UI_Element *backbutton = UI_GetByID(BACKBUTTON_UID);
+        backbutton->TriggerCallback = &SI_Callback_BackButton_Pressed;
+        break;
+        
     default:
         break;
     }
 }
 
 void IF_HandleTriggered(struct UI_Element *triggered){
-    triggered->TriggerCallback(triggered->UniqueID);
     triggered->trigger.isTriggered = true;
     triggered->trigger.trigger_stay_ms = 30;
     if (triggered->hasBackground) triggered->background->bgcolor = triggered->t_bgcolor;
     if (triggered->hasLabel) triggered->label.fgcolor = triggered->t_fgcolor;
+    triggered->TriggerCallback(triggered->UniqueID);
 }
 
 void Interface_EventHandler_Keyboard(SDL_Scancode keypress){

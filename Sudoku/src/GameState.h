@@ -5,7 +5,7 @@
 #include "ErrorHandler.h"
 #include "Cleanup.h"
 
-#define GS_TitleScreen_Durration 500
+#define GS_TitleScreen_Durration 2000
 
 static int current_GameState;
 static int current_SudokuState;

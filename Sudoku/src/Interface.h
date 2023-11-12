@@ -13,6 +13,7 @@
 #include "UI_Elements.h"
 
 #include "main_menu.h"
+#include "SudokuInterface.h"
 
 #include <SDL2/SDL.h>
 

@@ -1,5 +1,5 @@
-#ifndef MAIN_MENU_DEF
-#define MAIN_MENU_DEF
+#ifndef SudokuInterface_DEF
+#define SudokuInterface_DEF
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +13,7 @@
 #include "UI_Elements.h"
 #include "Interface.h"
 
-extern void MM_Callback_StartButton_Pressed(int sender_uid);
+
+extern void SI_Callback_BackButton_Pressed(int sender_UID);
 
 #endif
