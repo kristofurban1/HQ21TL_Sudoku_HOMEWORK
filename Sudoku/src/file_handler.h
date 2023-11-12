@@ -17,6 +17,7 @@
 #include "datastructures.h"
 #include "WINDOW_PARAMETERS.h"
 
+#include "ErrorHandler.h"
 #include "Cleanup.h"
 
 #include "debugmalloc.h"
