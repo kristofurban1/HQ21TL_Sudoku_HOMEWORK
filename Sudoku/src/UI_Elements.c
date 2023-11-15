@@ -364,3 +364,28 @@ void UIElements_Generate(){
     }
     #pragma endregion
 }
+
+void UpdateElementLabelText(struct UI_Element *element, char *newText){
+    if (!element->hasLabel) return;
+    element->label.text = newText;
+    if (element->label.texture == NULL)
+        SDL_DestroyTexture(element->label.texture);
+
+    element->label.texture = NULL;
+}
+
+void AppendElement(struct UI_Element *element){
+    ElementCount++;
+    UI_Elements = realloc(UI_Elements, ElementCount * sizeof(struct UI_Element));
+            malloc_verify(UI_Elements);
+    UI_Elements[ElementCount - 1] = element;
+}
+
+void AppendElementBatch(struct UI_Element **elementlist, int appendCount){
+    int startIndex = ElementCount;
+    ElementCount += appendCount;
+    UI_Elements = realloc(UI_Elements, ElementCount * sizeof(struct UI_Element));
+            malloc_verify(UI_Elements);
+    for (int i = startIndex; i < ElementCount; i++)
+        UI_Elements[i] = elementlist[i - startIndex];
+}

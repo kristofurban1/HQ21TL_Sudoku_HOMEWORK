@@ -13,6 +13,10 @@
 #include "UI_Elements.h"
 #include "Interface.h"
 
+static int BoardSize;
+extern void SetBoardSize(int newsize);
+extern int GetBoardSize();
+
 extern void MM_Callback_StartButton_Pressed(int sender_uid);
 
 #endif

@@ -90,6 +90,6 @@ extern int UI_SearchForTriggeredElement(SDL_Point cursorpos);
 
 extern void UIElements_Generate();
 
-
+extern void UpdateElementLabelText(struct UI_Element *element, char *newText);
 
 #endif

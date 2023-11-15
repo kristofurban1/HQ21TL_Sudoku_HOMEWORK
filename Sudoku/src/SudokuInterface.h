@@ -12,7 +12,9 @@
 #include "animation_handler.h"
 #include "UI_Elements.h"
 #include "Interface.h"
+#include "main_menu.h"
 
+#include "Sudoku.h"
 
 extern void SI_Callback_BackButton_Pressed(int sender_UID);
 

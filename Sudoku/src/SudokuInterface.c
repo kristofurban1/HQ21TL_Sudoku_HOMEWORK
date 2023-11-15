@@ -8,3 +8,8 @@ void SI_Callback_BackButton_Pressed(int sender_UID){
     UIElements_Generate();
     Interface_InitCurrentState();
 }
+
+void SI_GenerateSudoku(){
+    int boardsize = GetBoardSize();
+    
+}

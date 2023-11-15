@@ -7,3 +7,6 @@ void MM_Callback_StartButton_Pressed(int sender_uid){
     UIElements_Generate();
     Interface_InitCurrentState();
 }
+
+extern void SetBoardSize(int newsize) { BoardSize = newsize; }
+extern int GetBoardSize() { return BoardSize; }
