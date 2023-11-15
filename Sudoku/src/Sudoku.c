@@ -97,11 +97,15 @@ bool TestCol(int *board, int colIndex){
 bool TestAreaNum(int *board, int areaIndex, int num){
     bool found = false;
     int tmp = areaIndex * SudokuBoardSize;
+    int startCol = tmp % Sudoku_BoardDim;
     int startRow = tmp / Sudoku_BoardDim;
-    int startCol = 
     for (int areacellIndex = 0; areacellIndex < Sudoku_BoardDim; areacellIndex++)
     {
-
+        int x = areacellIndex % SudokuBoardSize;
+        int y = areacellIndex / SudokuBoardSize;
+        int col = startCol + x;
+        int row = startRow + y;
+        int index = (row * Sudoku_BoardDim) + col;
         if (board[index] == num){
             if (found) return false;
             found = true;
@@ -109,7 +113,12 @@ bool TestAreaNum(int *board, int areaIndex, int num){
     }
     return true;
 }
-bool TestArea(int *board, int areaIndex);
+bool TestArea(int *board, int areaIndex){
+    for (int i = 0; i < Sudoku_BoardDim; i ++){
+        if (!TestAreaNum(board, areaIndex, i)) return false;
+    }
+    return true;
+}
 
 void ResetHighlightMap();
 void ShowSelectedByUser();
