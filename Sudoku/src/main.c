@@ -8,6 +8,7 @@ SDL_Window *MainWindow      = NULL;
 SDL_Renderer *MainRenderer  = NULL;
 
 extern int main(int argc, char *argv[]) {
+    srand(time(NULL));
     GC_Init();          // GarbageCollector
     INITIALIZE_ALL();   // SDL
     FileHandler_Init(); // FileHandler
