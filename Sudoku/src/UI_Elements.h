@@ -17,8 +17,9 @@
 #include <SDL2/SDL.h>
 //#include <SDL2/SDL_ttf.h>
 
-#define STARTBUTTON_UID 11
-#define BACKBUTTON_UID 21
+#define STARTBUTTON_UID     11
+#define BACKBUTTON_UID      21
+#define SUDOKUPANEL_UID     22
 
 extern int ElementCount;
 extern struct UI_Element **UI_Elements;
@@ -91,5 +92,9 @@ extern int UI_SearchForTriggeredElement(SDL_Point cursorpos);
 extern void UIElements_Generate();
 
 extern void UpdateElementLabelText(struct UI_Element *element, char *newText);
+
+extern void AppendElement(struct UI_Element *element);
+extern void AppendElementBatch(struct UI_Element **elementlist, int appendCount);
+
 
 #endif

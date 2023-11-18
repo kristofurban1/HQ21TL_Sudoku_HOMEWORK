@@ -16,6 +16,12 @@
 
 #include "Sudoku.h"
 
+extern struct UI_Element **sudokuCellElements;
+
+extern void GenerateSudokuCellElements();
+
 extern void SI_Callback_BackButton_Pressed(int sender_UID);
+
+extern void SI_GenerateSudoku();
 
 #endif

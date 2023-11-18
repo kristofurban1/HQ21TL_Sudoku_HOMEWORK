@@ -4,6 +4,7 @@
 #define COLOR_DarkGreen     {70, 200, 30, 100}
 #define COLOR_White         {255, 255, 255, 255}
 #define COLOR_Gray          {80, 80, 80, 255}
+#define COLOR_DarkGray      {10, 10, 10, 255}
 #define COLOR_Black         {0, 0, 0, 255}
 
 #define TITLE "SUDOKU"
@@ -14,6 +15,7 @@ SDL_Color C_Green       = COLOR_Green;
 SDL_Color C_DarkGreen   = COLOR_DarkGreen;
 SDL_Color C_White       = COLOR_White;
 SDL_Color C_Gray        = COLOR_Gray;
+SDL_Color C_DarkGray    = COLOR_DarkGray;
 SDL_Color C_Black       = COLOR_Black;
 
 int ElementCount;
@@ -130,6 +132,8 @@ void UIElements_Generate(){
         
         TitleScreen->UniqueID = 0;
 
+        TitleScreen->visible = true;
+
         TitleScreen->hasAnim = false;
         TitleScreen->hasTrigger = false;
         TitleScreen->TriggerCallback = NULL;
@@ -172,6 +176,8 @@ void UIElements_Generate(){
         #pragma region Title
             Title->UniqueID = 10;
             
+            Title->visible = true;
+
             Title->hasAnim = false;
             Title->hasTrigger = false;
             Title->TriggerCallback = NULL;
@@ -199,6 +205,8 @@ void UIElements_Generate(){
                     
         #pragma region StartButton
             StartButton->UniqueID = STARTBUTTON_UID;
+
+            StartButton->visible = true;
 
             StartButton->hasAnim = false;
             StartButton->hasLabel = true;
@@ -290,9 +298,12 @@ void UIElements_Generate(){
     if(GetGamestate() == GS_SudokuState){
         SetErrorIndentfyer("UIGen: Sudoku");
         struct UI_Element *BackButton   = malloc(sizeof(UI_Element)); malloc_verify(BackButton);
+        struct UI_Element *SudokuPanel  = malloc(sizeof(UI_Element)); malloc_verify(SudokuPanel);
 
         #pragma region BackButton
             BackButton->UniqueID = BACKBUTTON_UID;
+
+            BackButton->visible = true;
 
             BackButton->hasAnim = false;
             BackButton->hasLabel = true;
@@ -355,10 +366,58 @@ void UIElements_Generate(){
             BackButton->trigger.trigger_stay_ms = 0;
         #pragma endregion
 
-        ElementCount = 1;
+        #pragma region SudokuBoardPanel
+
+            SudokuPanel->UniqueID = SUDOKUPANEL_UID;
+
+            SudokuPanel->visible = true;
+
+            SudokuPanel->hasAnim = false;
+            SudokuPanel->hasLabel = false;
+            SudokuPanel->hasTrigger = false;
+
+            SudokuPanel->hasBackground = true;
+
+            SudokuPanel->pos.width  = MainWindowWidth  * 0.8;
+            SudokuPanel->pos.height = MainWindowHeight * 0.8;
+
+            SudokuPanel->pos.x  = (MainWindowWidth / 2) + (SudokuPanel->pos.width / 2);
+            SudokuPanel->pos.y  = (MainWindowHeight / 2) + (SudokuPanel->pos.height / 2);
+
+            struct UI_ElementShape *SP_elementshape = malloc(sizeof(struct UI_ElementShape));
+                malloc_verify(SP_elementshape);
+
+                SP_elementshape->visible = true;
+                SP_elementshape->shapeCount = 1;
+                struct Shape *SP_bgshape = malloc(sizeof(struct Shape));
+                    malloc_verify(SP_elementshape);
+                
+                    SP_bgshape->offset_X = 0;
+                    SP_bgshape->offset_Y = 0;
+
+                    SP_bgshape->height = SudokuPanel->pos.height;
+                    SP_bgshape->width  = SudokuPanel->pos.width;
+
+                    SP_bgshape->boundrary_start = malloc(SudokuPanel->pos.height * sizeof(int)); malloc_verify(SP_bgshape->boundrary_start);
+                    SP_bgshape->boundrary_end = malloc(SudokuPanel->pos.height * sizeof(int)); malloc_verify(SP_bgshape->boundrary_end);
+
+                    for (int i = 0; i < SP_bgshape->height; i++)
+                    {
+                        SP_bgshape->boundrary_start[i] = 0;
+                        SP_bgshape->boundrary_end[i]   = SP_bgshape->width;
+                    }
+
+                SP_elementshape->shapes[0] = SP_bgshape;
+                SP_elementshape->bgcolor = C_DarkGray;
+            
+            SudokuPanel->background = SP_elementshape;
+        #pragma endregion
+
+        ElementCount = 2;
         UI_Elements = malloc( ElementCount * sizeof(struct UI_Element));
             malloc_verify(UI_Elements);
         UI_Elements[0] = BackButton;
+        UI_Elements[1] = SudokuPanel;
         return;
         
     }

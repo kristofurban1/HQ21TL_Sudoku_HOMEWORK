@@ -65,6 +65,7 @@ void Render_UIElements(Uint64 deltatime_ms){
     for (int element_index = 0; element_index < ElementCount; element_index++)
     {
         struct UI_Element *current = UI_Elements[element_index];
+        if(current->visible == false) continue;
 
         if (current->label.texture == NULL)
             Render_Label(&(current->label), &(current->pos));

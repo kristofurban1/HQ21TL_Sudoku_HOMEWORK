@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "debugmalloc.h"
 #include "ErrorHandler.h"
+#include "Cleanup.h"
 
 #define DifficultyEasy      0.8
 #define DifficultyMedium    0.6
@@ -20,6 +21,9 @@ extern int SelectedByUser;
 extern bool HighlightEnabled;
 extern int GameAvailableHelp;
 extern bool AutoHelp;
+
+extern int GetBoardTotalSize();
+extern int GetBoardDimensions();
 
 extern void GenerateBoard(int boardsize);
 extern void SolveGame();

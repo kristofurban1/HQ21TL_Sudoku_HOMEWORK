@@ -11,6 +11,14 @@ bool HighlightEnabled = false;
 int GameAvailableHelp = 0;
 bool AutoHelp = false;
 
+int GetBoardTotalSize(){
+    return Sudoku_BoardDim * Sudoku_BoardDim;
+}
+int GetBoardDimensions(){
+    return Sudoku_BoardDim;
+}
+
+
 void GenerateBoard(int boardsize){
     if (Sudoku_BoardDim != 0) TryFree(SudokuGame);
 
