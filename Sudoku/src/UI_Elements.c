@@ -4,7 +4,7 @@
 #define COLOR_DarkGreen     {70, 200, 30, 100}
 #define COLOR_White         {255, 255, 255, 255}
 #define COLOR_Gray          {80, 80, 80, 255}
-#define COLOR_DarkGray      {10, 10, 10, 255}
+#define COLOR_DarkGray      {3, 3, 3, 100}
 #define COLOR_Black         {0, 0, 0, 255}
 
 #define TITLE "SUDOKU"
@@ -312,14 +312,14 @@ void UIElements_Generate(){
 
             BackButton->pos.width = MainWindowWidth * 0.1;
             BackButton->pos.height = MainWindowHeight * 0.05;
-            BackButton->pos.x = MainWindowWidth * 0.01 + BackButton->pos.width / 2;
+            BackButton->pos.x = MainWindowWidth * 0.1 + BackButton->pos.width / 2;
             BackButton->pos.y = MainWindowWidth * 0.01 + BackButton->pos.height / 2;
 
             BackButton->label.visible = true;
             char *BB_LabelText = BACK_LABEL;
             BackButton->label.text = BB_LabelText;
             BackButton->label.texture = NULL;
-            BackButton->label.makeFit = false;
+            BackButton->label.makeFit = true;
             BackButton->label.preferWidthOverHeight = false;
             BackButton->label.targetSize_W = BackButton->pos.width * 1;
             BackButton->label.targetSize_H = BackButton->pos.height * 1;
@@ -378,36 +378,42 @@ void UIElements_Generate(){
 
             SudokuPanel->hasBackground = true;
 
-            SudokuPanel->pos.width  = MainWindowWidth  * 0.8;
-            SudokuPanel->pos.height = MainWindowHeight * 0.8;
+            SudokuPanel->pos.width  = MainWindowWidth * 0.8;
+            SudokuPanel->pos.height = SudokuPanel->pos.width;
+            
+            if (SudokuPanel->pos.height > MainWindowHeight * 0.8){
+                SudokuPanel->pos.height = MainWindowHeight * 0.8;
+                SudokuPanel->pos.width  = SudokuPanel->pos.height;
+            }
 
-            SudokuPanel->pos.x  = (MainWindowWidth / 2) + (SudokuPanel->pos.width / 2);
-            SudokuPanel->pos.y  = (MainWindowHeight / 2) + (SudokuPanel->pos.height / 2);
-
+            SudokuPanel->pos.x  = (MainWindowWidth / 2);
+            SudokuPanel->pos.y  = (MainWindowHeight / 2);
             struct UI_ElementShape *SP_elementshape = malloc(sizeof(struct UI_ElementShape));
                 malloc_verify(SP_elementshape);
 
                 SP_elementshape->visible = true;
                 SP_elementshape->shapeCount = 1;
-                struct Shape *SP_bgshape = malloc(sizeof(struct Shape));
-                    malloc_verify(SP_elementshape);
+                 SP_elementshape->shapes = malloc(sizeof(struct Shape * ) * SP_elementshape->shapeCount);
+
+            printf("hi\n");
+                SP_elementshape->shapes[0] = malloc(sizeof(struct Shape));
+                    malloc_verify(SP_elementshape->shapes[0]);
+
                 
-                    SP_bgshape->offset_X = 0;
-                    SP_bgshape->offset_Y = 0;
+                    SP_elementshape->shapes[0]->offset_X = 0;
+                    SP_elementshape->shapes[0]->offset_Y = 0;
 
-                    SP_bgshape->height = SudokuPanel->pos.height;
-                    SP_bgshape->width  = SudokuPanel->pos.width;
+                    SP_elementshape->shapes[0]->height = SudokuPanel->pos.height;
+                    SP_elementshape->shapes[0]->width  = SudokuPanel->pos.width;
 
-                    SP_bgshape->boundrary_start = malloc(SudokuPanel->pos.height * sizeof(int)); malloc_verify(SP_bgshape->boundrary_start);
-                    SP_bgshape->boundrary_end = malloc(SudokuPanel->pos.height * sizeof(int)); malloc_verify(SP_bgshape->boundrary_end);
+                    SP_elementshape->shapes[0]->boundrary_start = malloc(SudokuPanel->pos.height * sizeof(int)); malloc_verify(SP_elementshape->shapes[0]->boundrary_start);
+                    SP_elementshape->shapes[0]->boundrary_end = malloc(SudokuPanel->pos.height * sizeof(int)); malloc_verify(SP_elementshape->shapes[0]->boundrary_end);
 
-                    for (int i = 0; i < SP_bgshape->height; i++)
+                    for (int i = 0; i < SP_elementshape->shapes[0]->height; i++)
                     {
-                        SP_bgshape->boundrary_start[i] = 0;
-                        SP_bgshape->boundrary_end[i]   = SP_bgshape->width;
+                        SP_elementshape->shapes[0]->boundrary_start[i] = 0;
+                        SP_elementshape->shapes[0]->boundrary_end[i]   = SP_elementshape->shapes[0]->width;
                     }
-
-                SP_elementshape->shapes[0] = SP_bgshape;
                 SP_elementshape->bgcolor = C_DarkGray;
             
             SudokuPanel->background = SP_elementshape;
