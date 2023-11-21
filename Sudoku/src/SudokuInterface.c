@@ -30,15 +30,36 @@ void GenerateSudokuCellElements(){
     int cellSize = CellSizeWithBorder - borderWidth;
 
     #pragma region sudokuBackgroundGrid
-    struct UI_Element *sudokuBackground = malloc(sizeof(sudokuBackground));
-        malloc_verify(sudokuBackground);
+    struct UI_Element *sudokuBackground_bigGrid = malloc(sizeof(struct UI_Element));
+        malloc_verify(sudokuBackground_bigGrid);
+    struct UI_Element *sudokuBackground_smallGrid = malloc(sizeof(struct UI_Element));
+        malloc_verify(sudokuBackground_smallGrid);
 
-        sudokuBackground->UniqueID = -1;
-        sudokuBackground->visible = true;
-        sudokuBackground->hasAnim = false;
-        sudokuBackground->hasLabel = false;
-        sudokuBackground->hasTrigger = false;
-        sudokuBackground->hasBackground = true;
+        sudokuBackground_bigGrid->UniqueID = -1;
+        sudokuBackground_bigGrid->visible = true;
+        sudokuBackground_bigGrid->hasAnim = false;
+        sudokuBackground_bigGrid->hasLabel = false;
+        sudokuBackground_bigGrid->hasTrigger = false;
+        sudokuBackground_bigGrid->hasBackground = true;
+
+        sudokuBackground_smallGrid->UniqueID = -1;
+        sudokuBackground_smallGrid->visible = true;
+        sudokuBackground_smallGrid->hasAnim = false;
+        sudokuBackground_smallGrid->hasLabel = false;
+        sudokuBackground_smallGrid->hasTrigger = false;
+        sudokuBackground_smallGrid->hasBackground = true;
+
+        sudokuBackground_bigGrid->background = malloc(sizeof(struct UI_ElementShape));
+            malloc_verify(sudokuBackground_bigGrid->background);
+        
+        
+        sudokuBackground_bigGrid->background->shapeCount = SudokuBoardSize; // size-1 vertical(size-1 shape), size-1 horizontal(1 shape) => size-1 +1 = size 
+        sudokuBackground_bigGrid->background->shapes = malloc(sizeof(struct Shape) * )        
+            for (int areaSep_index = 0; areaSep_index < SudokuBoardSize; areaSep_index++)
+            {
+                
+            }
+
 
         
     #pragma endregion

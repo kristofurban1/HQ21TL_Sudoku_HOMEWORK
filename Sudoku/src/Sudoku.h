@@ -5,6 +5,7 @@
 #include "debugmalloc.h"
 #include "ErrorHandler.h"
 #include "Cleanup.h"
+#include "backtracking.h"
 
 #define DifficultyEasy      0.8
 #define DifficultyMedium    0.6
