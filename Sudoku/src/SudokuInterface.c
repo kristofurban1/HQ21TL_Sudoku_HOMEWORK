@@ -53,9 +53,9 @@ void GenerateSudokuCellElements(){
             malloc_verify(sudokuBackground_bigGrid->background);
         
         
-        sudokuBackground_bigGrid->background->shapeCount = SudokuBoardSize; // size-1 vertical(size-1 shape), size-1 horizontal(1 shape) => size-1 +1 = size 
-        sudokuBackground_bigGrid->background->shapes = malloc(sizeof(struct Shape) * )        
-            for (int areaSep_index = 0; areaSep_index < SudokuBoardSize; areaSep_index++)
+        sudokuBackground_bigGrid->background->shapeCount = numOfCellsInRow; // size-1 vertical(size-1 shape), size-1 horizontal(1 shape) => size-1 +1 = size 
+        sudokuBackground_bigGrid->background->shapes = malloc(sizeof(struct Shape) * numOfCellsInRow)        
+            for (int areaSep_index = 0; areaSep_index < numOfCellsInRow; areaSep_index++)
             {
                 
             }
