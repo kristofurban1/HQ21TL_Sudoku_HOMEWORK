@@ -16,6 +16,9 @@ extern int main(int argc, char *argv[]) {
     ResetElements();  // UI_Elements
     Gamestate_Init();   // Gamestate
 
+    SetBoardSize(3);
+    printf("BS: %d\n", GetBoardSize());
+
     SDL_SetWindowTitle(MainWindow, WINDOW_TITLE);
     SDL_Surface *icon = IMG_Load(GetAsset(ASSET_ICON));
     SDL_SetWindowIcon(MainWindow, icon);

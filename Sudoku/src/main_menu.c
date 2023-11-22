@@ -4,7 +4,9 @@ void MM_Callback_StartButton_Pressed(int sender_uid){
     printf("MM: STARTBUTTON_PRESSED\n");
     SetGameState(GS_SudokuState);
     SetSudokuState(GS_Sudoku);
+    SI_GenerateSudoku();
     UIElements_Generate();
+    GenerateSudokuCellElements();
     Interface_InitCurrentState();
 }
 

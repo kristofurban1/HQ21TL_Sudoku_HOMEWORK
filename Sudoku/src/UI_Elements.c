@@ -1,15 +1,15 @@
 #include "UI_Elements.h"
 
+#define TITLE "SUDOKU"
+#define START_LABEL "Play"
+#define BACK_LABEL "Back"
+
 #define COLOR_Green         {102, 255, 0, 250}
 #define COLOR_DarkGreen     {70, 200, 30, 100}
 #define COLOR_White         {255, 255, 255, 255}
 #define COLOR_Gray          {80, 80, 80, 255}
 #define COLOR_DarkGray      {3, 3, 3, 100}
 #define COLOR_Black         {0, 0, 0, 255}
-
-#define TITLE "SUDOKU"
-#define START_LABEL "Play"
-#define BACK_LABEL "Back"
 
 SDL_Color C_Green       = COLOR_Green;
 SDL_Color C_DarkGreen   = COLOR_DarkGreen;
@@ -393,9 +393,8 @@ void UIElements_Generate(){
 
                 SP_elementshape->visible = true;
                 SP_elementshape->shapeCount = 1;
-                 SP_elementshape->shapes = malloc(sizeof(struct Shape * ) * SP_elementshape->shapeCount);
+                SP_elementshape->shapes = malloc(sizeof(struct Shape * ) * SP_elementshape->shapeCount);
 
-            printf("hi\n");
                 SP_elementshape->shapes[0] = malloc(sizeof(struct Shape));
                     malloc_verify(SP_elementshape->shapes[0]);
 
